@@ -1,0 +1,36 @@
+# === 凭据/认证（禁止上传） ===
+认证信息配置.md
+
+# === Shell artifacts ===
+*.tar
+*.tar.gz
+*.xml.gz
+
+# === OS ===
+.DS_Store
+Thumbs.db
+
+# === IDE ===
+.vscode/
+.idea/
+
+# === Temp ===
+tmp/
+temp/
+*.tmp
+*.bak
+
+# === Git 仓库子目录 ===
+LS-King_code/
+
+# === Python ===
+__pycache__/
+*.pyc
+venv/
+
+# Garbage dirs from bash encoding issue
+skills/reasonix**
+skills/reasonix*cp*
+# 含凭据的 skill（仅限本机使用）
+skills/reasonix/diagnose/
+skills/reasonix/deploy-check/
