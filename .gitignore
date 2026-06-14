@@ -28,9 +28,7 @@ __pycache__/
 *.pyc
 venv/
 
-# Garbage dirs from bash encoding issue
 skills/reasonix**
-skills/reasonix*cp*
 # 含凭据的 skill（仅限本机使用）
 skills/reasonix/diagnose/
 skills/reasonix/deploy-check/
