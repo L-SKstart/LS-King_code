@@ -1,132 +1,115 @@
 ---
 name: token-budget-advisor
-description: >-
-  Offers the user an informed choice about how much response depth to
-  consume before answering. Use this skill when the user explicitly
-  wants to control response length, depth, or token budget.
-  TRIGGER when: "token budget", "token count", "token usage", "token limit",
-  "response length", "answer depth", "short version", "brief answer",
-  "detailed answer", "exhaustive answer", "respuesta corta vs larga",
-  "cu谩ntos tokens", "ahorrar tokens", "responde al 50%", "dame la versi贸n
-  corta", "quiero controlar cu谩nto usas", or clear variants where the
-  user is explicitly asking to control answer size or depth.
-  DO NOT TRIGGER when: user has already specified a level in the current
-  session (maintain it), the request is clearly a one-word answer, or
-  "token" refers to auth/session/payment tokens rather than response size.
+description: 回复前估算 token 用量，让用户选择回复深度（简洁→详尽四档），精准控制 token 消耗。
 ---
 
-# Token Budget Advisor (TBA)
+# Token Budget Advisor — Token 预算顾问
 
-Intercept the response flow to offer the user a choice about response depth **before** Claude answers.
+在每次回复前拦截，让用户选择回复深度后再回答，精准控制 token 消耗。
 
-## When to Use
+## 何时触发
 
-- User wants to control how long or detailed a response is
-- User mentions tokens, budget, depth, or response length
-- User says "short version", "tldr", "brief", "al 25%", "exhaustive", etc.
-- Any time the user wants to choose depth/detail level upfront
+- 用户提到 "token预算" "token用量" "token消耗" 
+- 用户说 "简短版" "详细版" "完整版" "展开说"
+- 用户说 "25%" "50%" "75%" "100%" 深度
+- 用户明确想控制回复长度
 
-**Do not trigger** when: user already set a level this session (maintain it silently), or the answer is trivially one line.
+**不触发：** 用户已在本次会话中设置过深度级别（保持不变）、答案明显只需一行、token 指认证令牌而非回复长度。
 
-## How It Works
+## 工作流程
 
-### Step 1 鈥?Estimate input tokens
+### 第一步：估算输入 token
 
-Use the repository's canonical context-budget heuristics to estimate the prompt's token count mentally.
+用项目标准方法估算输入 token：
+- 纯文字：`字数 × 1.3`
+- 代码为主：`字符数 / 4`
 
-Use the same calibration guidance as [context-budget](../context-budget/SKILL.md):
+### 第二步：按复杂度估算回复窗口
 
-- prose: `words 脳 1.3`
-- code-heavy or mixed/code blocks: `chars / 4`
+| 复杂度 | 倍率范围 | 典型场景 |
+|--------|----------|----------|
+| 简单 | 3× ~ 8× | "什么是 X？"、是/否 |
+| 中等 | 8× ~ 20× | "X 怎么工作的？" |
+| 中高 | 10× ~ 25× | 带上下文的代码请求 |
+| 复杂 | 15× ~ 40× | 多部分分析、架构对比 |
+| 创意 | 10× ~ 30× | 文案、叙事写作 |
 
-For mixed content, use the dominant content type and keep the estimate heuristic.
+回复窗口 = `输入token × 最小倍率` ~ `输入token × 最大倍率`
 
-### Step 2 鈥?Estimate response size by complexity
+### 第三步：展示深度选项
 
-Classify the prompt, then apply the multiplier range to get the full response window:
-
-| Complexity   | Multiplier range | Example prompts                                      |
-|--------------|------------------|------------------------------------------------------|
-| Simple       | 3脳 鈥?8脳          | "What is X?", yes/no, single fact                   |
-| Medium       | 8脳 鈥?20脳         | "How does X work?"                                  |
-| Medium-High  | 10脳 鈥?25脳        | Code request with context                           |
-| Complex      | 15脳 鈥?40脳        | Multi-part analysis, comparisons, architecture      |
-| Creative     | 10脳 鈥?30脳        | Stories, essays, narrative writing                  |
-
-Response window = `input_tokens 脳 mult_min` to `input_tokens 脳 mult_max` (but don鈥檛 exceed your model鈥檚 configured output-token limit).
-
-### Step 3 鈥?Present depth options
-
-Present this block **before** answering, using the actual estimated numbers:
+在回答前展示此块（填入实际估算数据）：
 
 ```
-Analyzing your prompt...
+分析你的问题中...
 
-Input: ~[N] tokens  |  Type: [type]  |  Complexity: [level]  |  Language: [lang]
+输入: ~[N] tokens | 类型: [type] | 复杂度: [level]
 
-Choose your depth level:
+选择回复深度：
 
-[1] Essential   (25%)  ->  ~[tokens]   Direct answer only, no preamble
-[2] Moderate    (50%)  ->  ~[tokens]   Answer + context + 1 example
-[3] Detailed    (75%)  ->  ~[tokens]   Full answer with alternatives
-[4] Exhaustive (100%)  ->  ~[tokens]   Everything, no limits
+[1] 简洁 (25%) → ~[tokens]  只给核心结论
+[2] 标准 (50%) → ~[tokens]  结论+上下文+1个示例
+[3] 详细 (75%) → ~[tokens]  多方案+对比+最佳实践
+[4] 完整 (100%) → ~[tokens] 全量分析，不限篇幅
 
-Which level? (1-4 or say "25% depth", "50% depth", "75% depth", "100% depth")
+选哪个？（1-4 或说 "25%" "50%" "75%" "100%"）
 
-Precision: heuristic estimate ~85-90% accuracy (卤15%).
+精度：启发式估算 ±15%
 ```
 
-Level token estimates (within the response window):
-- 25%  鈫?`min + (max - min) 脳 0.25`
-- 50%  鈫?`min + (max - min) 脳 0.50`
-- 75%  鈫?`min + (max - min) 脳 0.75`
-- 100% 鈫?`max`
+### 第四步：按所选级别回复
 
-### Step 4 鈥?Respond at the chosen level
+| 级别 | 长度 | 包含 | 省略 |
+|------|------|------|------|
+| 25% 简洁 | 2-4句 | 直接答案、核心结论 | 背景、示例、细节、替代方案 |
+| 50% 标准 | 1-3段 | 答案+必要上下文+1个示例 | 深度分析、边界情况 |
+| 75% 详细 | 结构化回复 | 多示例、优缺点、替代方案 | 极端边界情况 |
+| 100% 完整 | 不限 | 完整分析、全部代码、所有视角 | 无 |
 
-| Level            | Target length       | Include                                             | Omit                                              |
-|------------------|---------------------|-----------------------------------------------------|---------------------------------------------------|
-| 25% Essential    | 2-4 sentences max   | Direct answer, key conclusion                       | Context, examples, nuance, alternatives           |
-| 50% Moderate     | 1-3 paragraphs      | Answer + necessary context + 1 example              | Deep analysis, edge cases, references             |
-| 75% Detailed     | Structured response | Multiple examples, pros/cons, alternatives          | Extreme edge cases, exhaustive references         |
-| 100% Exhaustive  | No restriction      | Everything 鈥?full analysis, all code, all perspectives | Nothing                                        |
+## 快捷指令（跳过选择）
 
-## Shortcuts 鈥?skip the question
+| 用户说 | 对应级别 |
+|--------|----------|
+| "1" / "25%" / "简洁" / "简短" / "tldr" | 25% |
+| "2" / "50%" / "标准" / "中等" | 50% |
+| "3" / "75%" / "详细" / "完整一点" | 75% |
+| "4" / "100%" / "全部" / "展开讲" | 100% |
 
-If the user already signals a level, respond at that level immediately without asking:
+用户已在会话中设过级别 → 静默保持，直到用户切换。
 
-| What they say                                      | Level |
-|----------------------------------------------------|-------|
-| "1" / "25% depth" / "short version" / "brief answer" / "tldr"  | 25%   |
-| "2" / "50% depth" / "moderate depth" / "balanced answer"        | 50%   |
-| "3" / "75% depth" / "detailed answer" / "thorough answer"       | 75%   |
-| "4" / "100% depth" / "exhaustive answer" / "full deep dive"     | 100%  |
+## 精度说明
 
-If the user set a level earlier in the session, **maintain it silently** for subsequent responses unless they change it.
+使用启发式估算（非真实 tokenizer），精确度约 85-90%，偏差 ±15%。
 
-## Precision note
+## 来源
 
-This skill uses heuristic estimation 鈥?no real tokenizer. Accuracy ~85-90%, variance 卤15%. Always show the disclaimer.
+原始项目：[TBA - Token Budget Advisor for Claude Code](https://github.com/Xabilimon1/Token-Budget-Advisor-Claude-Code-)
+本版本已完全汉化并适配 Reasonix。
 
-## Examples
+---
 
-### Triggers
+## 用法指南
 
-- "Give me the short version first."
-- "How many tokens will your answer use?"
-- "Respond at 50% depth."
-- "I want the exhaustive answer, not the summary."
-- "Dame la version corta y luego la detallada."
+**一句话：** 回复前估算 token 用量，让用户选择回复深度（简洁→详尽四档），精准控制 token 消耗。
 
-### Does Not Trigger
+**调用方式：** 自动触发（检测到关键词）或 `/token-budget-advisor`
 
-- "What is a JWT token?"
-- "The checkout flow uses a payment token."
-- "Is this normal?"
-- "Complete the refactor."
-- Follow-up questions after the user already chose a depth for the session
+**示例：**
+```
+用户: "解释 Docker Compose healthcheck"（自动激活）
+→ 展示: 输入 ~200 tokens | 复杂度: 中等 | 选择 [1]简洁 [2]标准 [3]详细 [4]完整
+用户: "3" → 详细回答含多个示例和方案对比
 
-## Source
+用户: "50% 解释 MySQL 索引" → 直接以标准深度回答
+用户: "简短告诉我" → 直接以简洁模式回答
+```
 
-Standalone skill from [TBA 鈥?Token Budget Advisor for Claude Code](https://github.com/Xabilimon1/Token-Budget-Advisor-Claude-Code-).
-Original project also ships a Python estimator script, but this repository keeps the skill self-contained and heuristic-only.
+**快捷指令：**
+| 你说 | 效果 |
+|------|------|
+| "1" / "简洁" / "tldr" | 25% 只给关键结论 |
+| "2" / "标准" / "中等" | 50% 结论+上下文+1例 |
+| "3" / "详细" / "完整" | 75% 多方案+对比 |
+| "4" / "全部" / "展开" | 100% 全量分析 |
+
+**注意：** 一次设置后整个会话保持。精确度约 ±15%。

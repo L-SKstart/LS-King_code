@@ -50,3 +50,27 @@ description: Token 精简对话模式（受 caveman 72k⭐ 启发），删废话
 | 估算节省 | ~50% |
 | 已回复数 | X 条 |
 ```
+
+## 用法指南
+
+**一句话：** 将 Reasonix 回复切换为精简/洞穴/电报模式，删废话保内容，省 50%-70% token。
+
+**调用方式：** `/token-saver <模式>` 或直接说关键词
+
+**示例：**
+```
+/token-saver full     → 进入洞穴模式（默认，砍 ~50%）
+/token-saver ultra    → 进入电报模式（最狠，砍 ~70%）
+/token-saver lite     → 只删填废话（砍 ~30%）
+/token-saver off      → 恢复正常语气的完整回复
+/token-saver stats    → 查看当前会话的 token 节省估算
+```
+
+**效果对比：**
+| 模式 | 触发词 | 示例 |
+|------|--------|------|
+| Normal | 正常模式 | "根据配置文件，MySQL 使用了 192.168.5.128:13306，建议..." |
+| Full | 洞穴模式 | "MySQL: 192.168.5.128:13306。allowPublicKeyRetrieval 改 true。" |
+| Ultra | 电报模式 | "bootstrap.yml allowPublicKeyRetrieval=true。修复。" |
+
+**注意：** 代码、命令、路径、IP 端口完整保留。模式持续到切换为止。当前模式标注在回复开头：`[精简]` `[洞穴]` `[电报]`
