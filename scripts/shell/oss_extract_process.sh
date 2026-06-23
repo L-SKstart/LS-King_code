@@ -1,0 +1,277 @@
+#!/bin/bash
+# ============================================================
+# OSS 离线数据解压脚本
+#
+# 【用途】
+#   从 OSS 拉取数据 -> 检测目标字段 -> 解压到 PREDICT 目录结构
+#   本脚本会解压，不同于 oss_sync_process.sh（纯复制）
+#
+# 【文件名规则】
+#   input 文件:  {业务日期YYYYMMDDHHMMSS}_DHM_{生成时间戳}.tar.gz              （无 _output 后缀）
+#   output 文件: {业务日期YYYYMMDDHHMMSS}_DHM_{生成时间戳}_output*.tar.gz （匹配 _output 前缀，兼容 _iter3 等后缀）
+#   解压后 output 目录名自动改为 _out
+#
+# 【目录结构】
+#   PREDICT_DIR/
+#   +-- {YYYYMMDD}/
+#       +-- DHM_IN/{name}/          <- input 解压 (strip 展平)
+#       +-- DHM_OUT/{name}_out/     <- output 解压 (改_out + strip)
+#
+# 【注意】
+#   tar.gz 内部有两层同名目录，--strip-components=1 去掉外层
+#   input 和 output 是独立文件，各自独立下载、独立解压
+#
+# 【调用】
+#   bash oss_extract_process.sh              # 当天
+#   bash oss_extract_process.sh 20260604     # 指定日期
+#   bash oss_extract_process.sh 20260601,20260604  # 范围
+# ============================================================
+set -euo pipefail
+
+# ============================================================
+# ⚠️ 配置区 — 请根据实际环境修改以下参数
+# ============================================================
+
+# OSS 工具路径（确认服务器上 ossutil64 安装位置）
+Cloud_Tool="/opt/Alibaba/ossutil64"
+
+# OSS 连接信息（从 a.sh 复用，如有变更请更新）
+Endpoint="http://oss-cn-guangzhou-nfdw-d01-a.pdcc-cloud-inc.cn"
+accessKeyID="xeL2TscChf2chype"
+accessKeySecret="H1Bskv86AydGi7KBAc3jWnsiRdavhf"
+
+# ⚠️ OSS 远端目录 — 必填！如 oss://ydsjzx/sjgx/ayyk/DWMx/
+OSS_ARCHIVE_DIR="oss://ywhcssgdyhxt-znsfkf-dev-1/data/IIS"
+
+# 本地目录
+LOCAL_DOWN_DIR="/tmp/oss_data"        # 下载临时目录（脚本会自动清理）
+PREDICT_DIR="/opt/PREDICT"                # 解压输出根目录，请确认
+EXTRACT_TMP="/tmp/oss_extract_tmp"        # 解压中间临时目录（自动清理）
+
+# 检索字段（tar.gz 内 BasicInfo/BasicInfo.txt 中匹配的内容）
+# ⚠️ 注意：文件中的实际格式开头有 "# "，末尾有 "-"，不要漏写
+TARGET_FIELD="# CaseName 方案名称 UC-"
+
+# OSS 下载参数
+RETRY_TIMES=3
+CONNECT_TIMEOUT=30
+DEBUG="${OSS_DEBUG:-0}"               # 设 1 可打印 ossutil 调试信息
+
+# ============================================================
+# 以下为脚本逻辑，如无必要请勿修改
+# ============================================================
+
+# ---------- 日志 ----------
+log() { echo "$(date "+%Y-%m-%d %H:%M:%S") [$1] $2" >&2; }
+
+# ---------- 日期解析 ----------
+# 输入格式：空=当天 | yyyyMMdd=单日期 | yyyyMMdd,yyyyMMdd=范围
+normalize_date() {
+    local input="$1"
+    if [[ "$input" == *-* ]]; then
+        date -d "$input" +"%Y%m%d" 2>/dev/null || { log "ERROR" "日期格式错误: $input"; exit 1; }
+    else
+        [[ "$input" =~ ^[0-9]{8}$ ]] && echo "$input" || { log "ERROR" "日期格式错误: $input"; exit 1; }
+    fi
+}
+
+parse_dates() {
+    local input="${1:-}"
+    local dates=()
+    if [[ -z "$input" ]]; then
+        dates+=("$(date +"%Y%m%d")")
+        log "INFO" "未指定日期，使用当天: ${dates[0]}"
+    elif [[ "$input" == *","* ]]; then
+        local start end
+        start=$(normalize_date "${input%%,*}")
+        end=$(normalize_date "${input#*,}")
+        if [[ "$start" > "$end" ]]; then log "ERROR" "起始日期 > 结束日期"; exit 1; fi
+        local cur="$start"
+        while [[ "$cur" -le "$end" ]]; do
+            dates+=("$cur")
+            cur=$(date -d "${cur:0:4}-${cur:4:2}-${cur:6:2} +1 day" +"%Y%m%d")
+        done
+        log "INFO" "日期范围: $start ~ $end，共 ${#dates[@]} 天"
+    else
+        dates+=("$(normalize_date "$input")")
+        log "INFO" "单个日期: ${dates[0]}"
+    fi
+    echo "${dates[@]}"
+}
+
+# ---------- OSS 操作函数 ----------
+# 注：ossutil 的 -e -i -k 参数与 a.sh 保持一致
+
+# OSS 列出目录文件（与手动验证命令一致：ossutil64 ls <dir> -d -e ...）
+# 参数：$1=日期前缀(YYYYMMDD)，可选，不传则列出全部后在本地过滤
+oss_ls() {
+    local date_filter="${1:-}"
+    # 始终列出完整目录（-d 参数与手动执行保持一致），日期过滤在 process_one_date 中 grep 完成
+    if [[ "${DEBUG}" == "1" ]]; then
+        log "DEBUG" "oss_ls 执行: $Cloud_Tool ls ${OSS_ARCHIVE_DIR} -d -e ..."
+    fi
+    $Cloud_Tool ls "${OSS_ARCHIVE_DIR}" -d -e "$Endpoint" -i "$accessKeyID" -k "$accessKeySecret" 2>/dev/null
+}
+
+# 从 OSS 下载单个文件（通过 --include 精确匹配）
+# 参数：$1=文件名  $2=目标目录
+# 返回：0=成功  1=失败
+oss_download() {
+    local target_file="$1" dest_dir="$2"
+    echo ">>> 下载: ${target_file}"
+    $Cloud_Tool sync "${OSS_ARCHIVE_DIR}" "${dest_dir}/" \
+        -e "$Endpoint" -i "$accessKeyID" -k "$accessKeySecret" \
+        --recursive --include="${target_file}" -f \
+        --retry-times="${RETRY_TIMES}" --connect-timeout="${CONNECT_TIMEOUT}" --update \
+        >/dev/null 2>&1
+    if [[ -f "${dest_dir}/${target_file}" && -s "${dest_dir}/${target_file}" ]]; then
+        echo "   ✅ 下载成功"
+        return 0
+    else
+        echo "   ❌ 下载失败或文件为空"
+        return 1
+    fi
+}
+
+# ============================================================
+# 处理单个日期
+# ============================================================
+process_one_date() {
+    local date_yyyymmdd="$1"
+    echo ""
+    echo "========================================"
+    echo ">>> 处理日期: ${date_yyyymmdd}"
+    echo "========================================"
+
+    # ----- 1. OSS 列出文件，本地 grep 按日期过滤 -----
+    echo ">>> 拉取 OSS 文件列表..."
+    local ls_out
+    ls_out=$(oss_ls || true)
+    # 过滤当天 + .tar.gz 的文件，按时间戳倒序（最新在前）
+    local all_remote
+    all_remote=$(echo "$ls_out" | awk '{print $NF}' | grep "${date_yyyymmdd}" | grep '\.tar\.gz$' | sort -t'_' -k3 -r || true)
+
+    if [[ -z "$all_remote" ]]; then
+        echo "[WARN] OSS 无文件，跳过 ${date_yyyymmdd}"
+        return 0
+    fi
+
+    # ----- 2. 从最新到最旧，逐个下载并检索目标字段 -----
+    local target_input=""
+    local input_count=0
+    for remote_f in $all_remote; do
+        local fname="${remote_f##*/}"
+        # 跳过 output 文件
+        [[ "$fname" == *_output* ]] && continue
+        ((input_count++)) || true
+        echo -n "  检查: ${fname} ... "
+
+        # 清空临时目录，下载单个文件
+        rm -rf "${LOCAL_DOWN_DIR:?}"/* 2>/dev/null || true
+        if ! oss_download "$fname" "$LOCAL_DOWN_DIR"; then echo "❌ 跳过"; continue; fi
+
+        local local_f="${LOCAL_DOWN_DIR}/${fname}"
+        # tar -xOf 不解压直接读取内部文件 → 转码 → grep 目标字段
+        if tar -xOf "$local_f" --wildcards "*/BasicInfo/BasicInfo.txt" 2>/dev/null \
+            | iconv -f GB18030 -t UTF-8//IGNORE \
+            | grep -q "${TARGET_FIELD}"; then
+            echo "✅ 命中"
+            target_input="$local_f"
+            break
+        else
+            echo "❌ 无匹配"
+            rm -f "$local_f"
+        fi
+    done
+
+    if [[ -z "$target_input" ]]; then
+        echo "[WARN] ${date_yyyymmdd} 无含目标字段的文件，跳过"
+        return 0
+    fi
+
+    local base_name="${target_input##*/}"
+    local core_name="${base_name%.tar.gz}"        # 去掉 .tar.gz 后的核心名
+    local busi_date
+    busi_date=$(echo "$core_name" | awk -F'_DHM_' '{print $1}' | cut -c1-8)
+    echo ">>> 选中: ${base_name}  业务日期: ${busi_date}"
+
+    # 3. 解压 input -> PREDICT/{busi_date}/DHM_IN/{core_name}/
+    # --strip-components=1 去掉 tar 包外层同名目录
+    local in_target="${PREDICT_DIR}/${busi_date}/DHM_IN/${core_name}"
+    echo ">>> 解压 input -> ${in_target}/"
+    rm -rf "${EXTRACT_TMP:?}"/* 2>/dev/null || true
+    tar -zxvf "$target_input" -C "${EXTRACT_TMP}" --strip-components=1
+
+    mkdir -p "${PREDICT_DIR}/${busi_date}/DHM_IN"
+    if [[ -d "${EXTRACT_TMP}/${core_name}" ]]; then
+        mv "${EXTRACT_TMP}/${core_name}" "${in_target}"
+    else
+        mkdir -p "${in_target}"
+        mv "${EXTRACT_TMP}"/* "${in_target}/" 2>/dev/null || true
+    fi
+    echo "   ${in_target}/"
+
+    # 4. 从 OSS 列表按前缀查找 output 文件，解压 -- 改 _out
+    # 兼容 _output.tar.gz / _output_iter3.tar.gz 等不同后缀
+    echo ">>> 检测 output..."
+    local output_name
+    output_name=$(echo "$all_remote" | grep -E "${core_name}_output.*\.tar\.gz$" | head -1)
+    if [[ -n "$output_name" ]]; then
+        echo "   找到: ${output_name}"
+        rm -rf "${LOCAL_DOWN_DIR:?}"/* 2>/dev/null || true
+        if oss_download "$output_name" "$LOCAL_DOWN_DIR"; then
+            local out_target="${PREDICT_DIR}/${busi_date}/DHM_OUT/${core_name}_out"
+            echo ">>> 解压 output -> ${out_target}/"
+            rm -rf "${EXTRACT_TMP:?}"/* 2>/dev/null || true
+            tar -zxvf "${LOCAL_DOWN_DIR}/${output_name}" -C "${EXTRACT_TMP}" --strip-components=1
+
+            mkdir -p "${PREDICT_DIR}/${busi_date}/DHM_OUT"
+            # 兼容解压后的目录名（_output_iter3 或 _output）
+            local extracted_dir
+            extracted_dir=$(ls -d "${EXTRACT_TMP}/${core_name}_output"* 2>/dev/null | head -1)
+            if [[ -n "$extracted_dir" ]]; then
+                mv "$extracted_dir" "${out_target}"
+            else
+                mkdir -p "${out_target}"
+                mv "${EXTRACT_TMP}"/* "${out_target}/" 2>/dev/null || true
+            fi
+            echo "   ${out_target}/"
+        fi
+    else
+        echo "   [通知] OSS 无对应 output"
+    fi
+
+    echo ">>> 日期 ${date_yyyymmdd} 处理完成"
+    return 0
+}
+
+# ============================================================
+# 主流程
+# ============================================================
+main() {
+    local user_input="${1:-}"
+    # 确保 OSS 路径以 / 结尾，避免路径拼接错误（参照 a.sh）
+    [[ "$OSS_ARCHIVE_DIR" != */ ]] && OSS_ARCHIVE_DIR="${OSS_ARCHIVE_DIR}/"
+    mkdir -p "${LOCAL_DOWN_DIR}" "${PREDICT_DIR}" "${EXTRACT_TMP}"
+
+    local date_list
+    date_list=($(parse_dates "$user_input"))
+    if [[ ${#date_list[@]} -eq 0 ]]; then
+        log "ERROR" "无有效日期"
+        exit 1
+    fi
+
+    local succ=0 fail=0
+    for dt in "${date_list[@]}"; do
+        if process_one_date "$dt"; then ((succ++)) || true; else ((fail++)) || true; fi
+    done
+
+    echo ""
+    echo "========================================"
+    echo "✅ 全部完成！成功: ${succ}  跳过: ${fail}"
+    echo "   解压根目录: ${PREDICT_DIR}"
+    ls -ld "${PREDICT_DIR}"/*/ 2>/dev/null || true
+    echo "========================================"
+}
+
+main "$@"
