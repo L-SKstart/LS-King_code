@@ -11,11 +11,12 @@
 #   output 文件: {业务日期YYYYMMDDHHMMSS}_DHM_{生成时间戳}_output*.tar.gz （匹配 _output 前缀，兼容 _iter3 等后缀）
 #   解压后 output 目录名自动改为 _out
 #
-# 【目录结构】
-#   PREDICT_DIR/
+# 【目录结构】（IN 为顶层目录）
+#   {PREDICT_DIR}/
+#   +-- ControlParameter.txt
 #   +-- {YYYYMMDD}/
-#       +-- DHM_IN/{name}/          <- input 解压 (strip 展平)
-#       +-- DHM_OUT/{name}_out/     <- output 解压 (改_out + strip)
+#       +-- DHM_IN/{业务日期}_DHM_{时间戳}/          <- input
+#       +-- DHM_OUT/{业务日期}_DHM_{时间戳}_out/     <- output 改 _out
 #
 # 【注意】
 #   tar.gz 内部有两层同名目录，--strip-components=1 去掉外层
@@ -45,7 +46,7 @@ OSS_ARCHIVE_DIR="oss://ydxt-2/extdata/DDXT/clearing/IIS"
 
 # 本地目录
 LOCAL_DOWN_DIR="/tmp/oss_data"        # 下载临时目录（脚本会自动清理）
-PREDICT_DIR="/opt/PREDICT"                # 解压输出根目录，请确认
+PREDICT_DIR="/mnt/data/oss/DHM/IN"            # 解压输出根目录（IN 为顶层），请确认
 EXTRACT_TMP="/tmp/oss_extract_tmp"        # 解压中间临时目录（自动清理）
 
 # 检索字段（tar.gz 内 BasicInfo/BasicInfo.txt 中匹配的内容）
