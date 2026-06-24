@@ -31,12 +31,12 @@ set -euo pipefail
 Cloud_Tool="/opt/Alibaba/ossutil64"
 
 # OSS 连接信息（从 a.sh 复用，如有变更请更新）
-Endpoint="http://oss-cn-guangzhou-nfdw-d01-a.pdcc-cloud-inc.cn"
-accessKeyID="xeL2TscChf2chype"
-accessKeySecret="H1Bskv86AydGi7KBAc3jWnsiRdavhf"
+Endpoint="http://oss-cn-guangzhou-mwang-d01-a.pddc-cloud2.cn"
+accessKeyID="0tyuF0mqAqoIpPl"
+accessKeySecret="c4pth7OE4jPpqPfHldo4QWmgz1I9yj3"
 
-# ⚠️ OSS 远端目录 — 必填！如 oss://ydsjzx/sjgx/ayyk/DWMx/
-OSS_ARCHIVE_DIR="oss://ywhcssgdyhxt-znsfkf-dev-1/data/IIS"
+# ⚠️ OSS 远端目录 — 必填！
+OSS_ARCHIVE_DIR="oss://ydxt-2/extdata/DDXT/clearing/IIS"
 
 # 本地目录
 LOCAL_DOWN_DIR="/tmp/oss_data"        # 下载临时目录（脚本会自动清理）
@@ -96,26 +96,28 @@ parse_dates() {
 # ---------- OSS 操作函数 ----------
 # 注：ossutil 的 -e -i -k 参数与 a.sh 保持一致
 
-# OSS 列出目录文件（与手动验证命令一致：ossutil64 ls <dir> -d -e ...）
-# 参数：$1=日期前缀(YYYYMMDD)，可选，不传则列出全部后在本地过滤
+# OSS 按日期列出文件（--include 服务端过滤，与手动验证命令一致）
+# 参数：$1=日期(YYYYMMDD)
 oss_ls() {
     local date_filter="${1:-}"
-    # 始终列出完整目录（-d 参数与手动执行保持一致），日期过滤在 process_one_date 中 grep 完成
+    local include_arg=""
+    [[ -n "$date_filter" ]] && include_arg="--include=${date_filter}*"
     if [[ "${DEBUG}" == "1" ]]; then
-        log "DEBUG" "oss_ls 执行: $Cloud_Tool ls ${OSS_ARCHIVE_DIR} -d -e ..."
+        log "DEBUG" "oss_ls 执行: $Cloud_Tool ls ${OSS_ARCHIVE_DIR} -d ${include_arg} -e ..."
     fi
-    $Cloud_Tool ls "${OSS_ARCHIVE_DIR}" -d -e "$Endpoint" -i "$accessKeyID" -k "$accessKeySecret" 2>/dev/null
+    $Cloud_Tool ls "${OSS_ARCHIVE_DIR}" -d ${include_arg} -e "$Endpoint" -i "$accessKeyID" -k "$accessKeySecret" 2>/dev/null
 }
 
-# 从 OSS 下载单个文件（通过 --include 精确匹配）
+# 从 OSS 下载文件（通过文件名前缀匹配，取 _DHM_ 前的时间戳前缀）
 # 参数：$1=文件名  $2=目标目录
 # 返回：0=成功  1=失败
 oss_download() {
     local target_file="$1" dest_dir="$2"
-    echo ">>> 下载: ${target_file}"
+    local prefix="${target_file%%_DHM*}"
+    echo ">>> 下载: ${target_file}（前缀: ${prefix}*）"
     $Cloud_Tool sync "${OSS_ARCHIVE_DIR}" "${dest_dir}/" \
         -e "$Endpoint" -i "$accessKeyID" -k "$accessKeySecret" \
-        --recursive --include="${target_file}" -f \
+        --recursive --include="${prefix}*" -f \
         --retry-times="${RETRY_TIMES}" --connect-timeout="${CONNECT_TIMEOUT}" --update \
         >/dev/null 2>&1
     if [[ -f "${dest_dir}/${target_file}" && -s "${dest_dir}/${target_file}" ]]; then
@@ -137,13 +139,13 @@ process_one_date() {
     echo ">>> 处理日期: ${date_yyyymmdd}"
     echo "========================================"
 
-    # ----- 1. OSS 列出文件，本地 grep 按日期过滤 -----
-    echo ">>> 拉取 OSS 文件列表..."
+    # ----- 1. OSS 按日期列文件（--include 服务端过滤）-----
+    echo ">>> 拉取 OSS 文件列表（日期: ${date_yyyymmdd}）..."
     local ls_out
-    ls_out=$(oss_ls || true)
-    # 过滤当天 + .tar.gz 的文件，按时间戳倒序（最新在前）
+    ls_out=$(oss_ls "$date_yyyymmdd" || true)
+    # 过滤 .tar.gz，匹配文件名以日期开头（/日期前缀）
     local all_remote
-    all_remote=$(echo "$ls_out" | awk '{print $NF}' | grep "${date_yyyymmdd}" | grep '\.tar\.gz$' | sort -t'_' -k3 -r || true)
+    all_remote=$(echo "$ls_out" | awk -v d="${date_yyyymmdd}" '$NF ~ "/" d && $NF ~ /\.tar\.gz$/' | sort -t'_' -k3 -r || true)
 
     if [[ -z "$all_remote" ]]; then
         echo "[WARN] OSS 无文件，跳过 ${date_yyyymmdd}"
@@ -165,8 +167,9 @@ process_one_date() {
         if ! oss_download "$fname" "$LOCAL_DOWN_DIR"; then echo "❌ 跳过"; continue; fi
 
         local local_f="${LOCAL_DOWN_DIR}/${fname}"
+        local inner_dir="${fname%.tar.gz}"
         # tar -xOf 不解压直接读取内部文件 → 转码 → grep 目标字段
-        if tar -xOf "$local_f" --wildcards "*/BasicInfo/BasicInfo.txt" 2>/dev/null \
+        if tar -xOf "$local_f" "${inner_dir}/BasicInfo/BasicInfo.txt" 2>/dev/null \
             | iconv -f GB18030 -t UTF-8//IGNORE \
             | grep -q "${TARGET_FIELD}"; then
             echo "✅ 命中"
@@ -197,6 +200,7 @@ process_one_date() {
     echo ">>> 检测 output..."
     local output_name
     output_name=$(echo "$all_remote" | grep -E "${core_name}_output.*\.tar\.gz$" | head -1)
+    output_name="${output_name##*/}"
     if [[ -n "$output_name" ]]; then
         echo "   找到: ${output_name}"
         rm -rf "${LOCAL_DOWN_DIR:?}"/* 2>/dev/null || true
