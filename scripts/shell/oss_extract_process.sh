@@ -125,7 +125,9 @@ oss_download() {
     $Cloud_Tool sync "${OSS_ARCHIVE_DIR}" "${dest_dir}/" \
         -e "$Endpoint" -i "$accessKeyID" -k "$accessKeySecret" \
         --recursive --include="${prefix}*" -f \
-        --retry-times="${RETRY_TIMES}" --connect-timeout="${CONNECT_TIMEOUT}" --update
+        --retry-times="${RETRY_TIMES}" --connect-timeout="${CONNECT_TIMEOUT}" --update \
+        >/dev/null \
+        >/dev/null 2>&1
     if [[ -f "${dest_dir}/${target_file}" && -s "${dest_dir}/${target_file}" ]]; then
         echo "   ✅ 下载成功"
         return 0
