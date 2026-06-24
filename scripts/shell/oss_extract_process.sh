@@ -119,10 +119,11 @@ oss_ls() {
 # 返回：0=成功  1=失败
 oss_download() {
     local target_file="$1" dest_dir="$2"
-    echo ">>> 下载: ${target_file}"
+    local prefix="${target_file%%_DHM*}"
+    echo ">>> 下载: ${target_file}（前缀: ${prefix}*）"
     $Cloud_Tool sync "${OSS_ARCHIVE_DIR}" "${dest_dir}/" \
         -e "$Endpoint" -i "$accessKeyID" -k "$accessKeySecret" \
-        --recursive --include="${target_file}" -f \
+        --recursive --include="${prefix}*" -f \
         --retry-times="${RETRY_TIMES}" --connect-timeout="${CONNECT_TIMEOUT}" --update \
         >/dev/null 2>&1
     if [[ -f "${dest_dir}/${target_file}" && -s "${dest_dir}/${target_file}" ]]; then
@@ -150,7 +151,7 @@ process_one_date() {
     ls_out=$(oss_ls "$date_yyyymmdd" || true)
     # 过滤 .tar.gz，按时间戳倒序（最新在前）
     local all_remote
-    all_remote=$(echo "$ls_out" | awk -v d="${date_yyyymmdd}" 'index($NF,d) && $NF ~ /\.tar\.gz$/' | sort -t'_' -k3 -r || true)
+    all_remote=$(echo "$ls_out" | awk -v d="${date_yyyymmdd}" '$NF ~ "/" d && $NF ~ /\.tar\.gz$/' | sort -t'_' -k3 -r || true)
 
     if [[ -z "$all_remote" ]]; then
         echo "[WARN] OSS 无文件，跳过 ${date_yyyymmdd}"
