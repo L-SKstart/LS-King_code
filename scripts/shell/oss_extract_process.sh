@@ -218,6 +218,7 @@ process_one_date() {
     echo ">>> 检测 output..."
     local output_name
     output_name=$(echo "$all_remote" | grep -E "${core_name}_output.*\.tar\.gz$" | head -1)
+    output_name="${output_name##*/}"
     if [[ -n "$output_name" ]]; then
         echo "   找到: ${output_name}"
         rm -rf "${LOCAL_DOWN_DIR:?}"/* 2>/dev/null || true
