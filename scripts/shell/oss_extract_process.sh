@@ -107,12 +107,24 @@ parse_dates() {
 # 参数：$1=日期(YYYYMMDD)
 oss_ls() {
     local date_filter="${1:-}"
-    local include_arg=""
-    [[ -n "$date_filter" ]] && include_arg="--include=${date_filter}*"
-    if [[ "${DEBUG}" == "1" ]]; then
-        log "DEBUG" "oss_ls 执行: $Cloud_Tool ls ${OSS_ARCHIVE_DIR} -d ${include_arg} -e ..."
+    local err_file="/tmp/oss_ls_err.$$"
+    local result
+    if [[ -n "$date_filter" ]]; then
+        if [[ "${DEBUG}" == "1" ]]; then
+            log "DEBUG" "oss_ls 执行: $Cloud_Tool ls ${OSS_ARCHIVE_DIR} -d --include=${date_filter}* -e ..."
+        fi
+        result=$($Cloud_Tool ls "${OSS_ARCHIVE_DIR}" -d --include="${date_filter}*" -e "$Endpoint" -i "$accessKeyID" -k "$accessKeySecret" 2>"$err_file")
+    else
+        if [[ "${DEBUG}" == "1" ]]; then
+            log "DEBUG" "oss_ls 执行: $Cloud_Tool ls ${OSS_ARCHIVE_DIR} -d -e ..."
+        fi
+        result=$($Cloud_Tool ls "${OSS_ARCHIVE_DIR}" -d -e "$Endpoint" -i "$accessKeyID" -k "$accessKeySecret" 2>"$err_file")
     fi
-    $Cloud_Tool ls "${OSS_ARCHIVE_DIR}" -d ${include_arg} -e "$Endpoint" -i "$accessKeyID" -k "$accessKeySecret" 2>/dev/null
+    if [[ -s "$err_file" ]]; then
+        log "WARN" "ossutil stderr: $(head -1 "$err_file")"
+    fi
+    rm -f "$err_file"
+    echo "$result"
 }
 
 # 从 OSS 下载单个文件（通过 --include 精确匹配）
@@ -126,7 +138,6 @@ oss_download() {
         -e "$Endpoint" -i "$accessKeyID" -k "$accessKeySecret" \
         --recursive --include="${prefix}*" -f \
         --retry-times="${RETRY_TIMES}" --connect-timeout="${CONNECT_TIMEOUT}" --update \
-        >/dev/null \
         >/dev/null 2>&1
     if [[ -f "${dest_dir}/${target_file}" && -s "${dest_dir}/${target_file}" ]]; then
         echo "   ✅ 下载成功"
@@ -153,11 +164,11 @@ process_one_date() {
     ls_out=$(oss_ls "$date_yyyymmdd" || true)
     # 过滤 .tar.gz，按时间戳倒序（最新在前）
     local all_remote
-    all_remote=$(echo "$ls_out" | awk -v d="${date_yyyymmdd}" '$NF ~ "/" d && $NF ~ /\.tar\.gz$/' | sort -t'_' -k3 -r || true)
+    all_remote=$(echo "$ls_out" | grep "/${date_yyyymmdd}.*_DHM_.*\.tar\.gz" | sort -t'_' -k3 -r || true)
 
     if [[ -z "$all_remote" ]]; then
         echo "[WARN] OSS 无文件，跳过 ${date_yyyymmdd}"
-        return 0
+        return 1
     fi
 
     # ----- 2. 从最新到最旧，逐个下载并检索目标字段 -----
@@ -191,7 +202,7 @@ process_one_date() {
 
     if [[ -z "$target_input" ]]; then
         echo "[WARN] ${date_yyyymmdd} 无含目标字段的文件，跳过"
-        return 0
+        return 1
     fi
 
     local base_name="${target_input##*/}"
@@ -205,14 +216,22 @@ process_one_date() {
     local in_target="${PREDICT_DIR}/${busi_date}/DHM_IN/${core_name}"
     echo ">>> 解压 input -> ${in_target}/"
     rm -rf "${EXTRACT_TMP:?}"/* 2>/dev/null || true
-    tar -zxvf "$target_input" -C "${EXTRACT_TMP}" --strip-components=1
+    if ! tar -zxvf "$target_input" -C "${EXTRACT_TMP:?}" --strip-components=1; then
+        log "ERROR" "解压 input 失败: ${target_input}"
+        return 1
+    fi
 
-    mkdir -p "${PREDICT_DIR}/${busi_date}/DHM_IN"
-    if [[ -d "${EXTRACT_TMP}/${core_name}" ]]; then
-        mv "${EXTRACT_TMP}/${core_name}" "${in_target}"
+    mkdir -p "${PREDICT_DIR:?}/${busi_date:?}/DHM_IN"
+    [[ -n "${in_target}" && "${in_target}" != "/" ]] && rm -rf "${in_target}"
+    if [[ -d "${EXTRACT_TMP:?}/${core_name}" ]]; then
+        mv "${EXTRACT_TMP:?}/${core_name}" "${in_target}"
     else
         mkdir -p "${in_target}"
-        mv "${EXTRACT_TMP}"/* "${in_target}/" 2>/dev/null || true
+        local item
+        for item in "${EXTRACT_TMP:?}"/*; do
+            [[ -e "$item" ]] || continue
+            mv "$item" "${in_target}/" || true
+        done
     fi
     echo "   ${in_target}/"
 
@@ -220,7 +239,7 @@ process_one_date() {
     # 兼容 _output.tar.gz / _output_iter3.tar.gz 等不同后缀
     echo ">>> 检测 output..."
     local output_name
-    output_name=$(echo "$all_remote" | grep -E "${core_name}_output.*\.tar\.gz$" | head -1)
+    output_name=$(echo "$all_remote" | grep -E "${core_name}_output.*\.tar\.gz" | head -1 || true)
     output_name="${output_name##*/}"
     if [[ -n "$output_name" ]]; then
         echo "   找到: ${output_name}"
@@ -229,17 +248,25 @@ process_one_date() {
             local out_target="${PREDICT_DIR}/${busi_date}/DHM_OUT/${core_name}_out"
             echo ">>> 解压 output -> ${out_target}/"
             rm -rf "${EXTRACT_TMP:?}"/* 2>/dev/null || true
-            tar -zxvf "${LOCAL_DOWN_DIR}/${output_name}" -C "${EXTRACT_TMP}" --strip-components=1
+            if ! tar -zxvf "${LOCAL_DOWN_DIR}/${output_name}" -C "${EXTRACT_TMP:?}" --strip-components=1; then
+                log "ERROR" "解压 output 失败: ${output_name}"
+                return 1
+            fi
 
-            mkdir -p "${PREDICT_DIR}/${busi_date}/DHM_OUT"
+            mkdir -p "${PREDICT_DIR:?}/${busi_date:?}/DHM_OUT"
             # 兼容解压后的目录名（_output_iter3 或 _output）
             local extracted_dir
-            extracted_dir=$(ls -d "${EXTRACT_TMP}/${core_name}_output"* 2>/dev/null | head -1)
+            extracted_dir=$(ls -d "${EXTRACT_TMP:?}/${core_name}"* 2>/dev/null | head -1)
             if [[ -n "$extracted_dir" ]]; then
+                [[ -n "${out_target}" && "${out_target}" != "/" ]] && rm -rf "${out_target}"
                 mv "$extracted_dir" "${out_target}"
             else
                 mkdir -p "${out_target}"
-                mv "${EXTRACT_TMP}"/* "${out_target}/" 2>/dev/null || true
+                local item2
+                for item2 in "${EXTRACT_TMP:?}"/*; do
+                    [[ -e "$item2" ]] || continue
+                    mv "$item2" "${out_target}/" || true
+                done
             fi
             echo "   ${out_target}/"
         fi

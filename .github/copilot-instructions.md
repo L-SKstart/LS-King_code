@@ -2,7 +2,7 @@
 
 > 适用：`D:\Reasonix_Workspace\` 全部工作  
 > 本文件为 VS Code agent instructions，每次交互自动加载  
-> 最后更新：2026-06-14 16:32
+> 最后更新：2026-06-21 18:40
 
 ---
 
