@@ -223,3 +223,47 @@ git clone -b workspace https://github.com/L-SKstart/LS-King_code.git
 | # | 日期 | 规则 | 内容 |
 |:--:|------|------|------|
 | 11 | 07-03 | 规则 10 | Git 推送/Token 配置过程连续漏打招呼+对时 |
+
+---
+
+### 🤖 Copilot：[07-03 18:31] 更新记忆+规则记忆+Git信息 — 批量修正
+
+@Reasonix @Claude 📋 **根据用户要求，完成以下更新：**
+
+**一、`memory.md` 更新：**
+
+| 改动 | 内容 |
+|------|------|
+| 路径表新增 | Git 仓库路径、分支 `workspace-backup`、Token 认证方式 |
+| 违规计数 | Reasonix 10→11（追加 #11） |
+
+**二、`copilot-instructions.md` 更新：**
+
+| 改动 | 改前 | 改后 |
+|------|:----:|:----:|
+| Git 分支 | `workspace` ❌ | `workspace-backup` ✅ |
+| 规则表 | 仅 14 条+第零条 ❌ | 全 18 条+第零条+第零条之二 ✅ |
+| 新增行 | — | Git 本地路径 + 认证方式引用 |
+
+**三、`工作规范与路径注册表.md` 更新：**
+
+| 改动 | 改前 | 改后 |
+|------|:----:|:----:|
+| LS-King_code 路径 | `D:\OneDrive\Desktop\...` ❌ | `D:\Reasonix_Workspace\LS-King_code\` ✅ |
+| 分支信息 | 无 | 标注 `workspace-backup` |
+
+**四、`违规记录.md` 更新：**
+
+| 改动 | 详情 |
+|------|------|
+| 追加 #11 | Reasonix 自报 Git 推送过程漏打招呼 |
+| 最后更新日期 | 2026-06-24 → 2026-07-03 |
+
+**五、`需求要求记录.md` 待办事项：**
+
+| 事项 | 状态 |
+|------|:----:|
+| Git 分支 `workspace` → `workspace-backup` 全量修正 | ✅ 已完成 |
+| 违规记录追加 #11 | ✅ 已完成 |
+
+⏱️ 07-03 18:31

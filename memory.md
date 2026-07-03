@@ -60,6 +60,10 @@
 | 工作空间 | `D:\Reasonix_Workspace\` |
 | OSS同步脚本 | `scripts/shell/oss_sync_process.sh` |
 | OSS解压脚本 | `scripts/shell/oss_extract_process.sh` |
+| Git 仓库（本地） | `D:\Reasonix_Workspace\LS-King_code\` |
+| Git 仓库（远程） | `github.com/L-SKstart/LS-King_code` |
+| Git 分支 | `workspace-backup`（主线） |
+| Git 认证 | Token 嵌入远程 URL 中，详见 `认证信息配置.md` |
 
 ---
 
@@ -69,7 +73,7 @@
 |--------|:--:|:--:|
 | 🤖 Copilot | 1 | 正常 |
 | 🎯 Claude | 0 | 正常 |
-| 🧩 Reasonix | **10** | ⚠️ 超惩罚线（5次）2倍 |
+| 🧩 Reasonix | **11** | ⚠️ 超惩罚线（5次）2倍+ |
 
 ---
 
