@@ -59,7 +59,9 @@
 | OSS 桶 | `oss://ydxt-2/extdata/DDXT/clearing/IIS/` |
 | Git 仓库（远程） | `github.com/L-SKstart/LS-King_code` |
 | Git 分支（活跃） | `workspace` |
-| Git 分支（备份） | `workspace-backup`（远端） |
+| Git 分支（备份） | `workspace-backup`（远端），每次推送前自动更新 |
+| Git 推送规则 | 🚨 **先备份再推送**：`git branch -f workspace-backup workspace && git push origin workspace-backup --force && git push origin workspace` |
+| Git 备份清理 | 超过 180 天未更新的备份分支自动清除 |
 | Git 认证 | Token 嵌入 `.git/config`，详见 `认证信息配置.md` |
 | OSS 脚本 | `scripts/shell/oss_sync_process.sh`、`oss_extract_process.sh` |
 | Skill 目录 | `skills/reasonix/`（11个） |
