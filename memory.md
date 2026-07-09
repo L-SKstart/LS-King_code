@@ -1,6 +1,6 @@
 # 工作空间统一记忆（三方共读，唯一文件）
 
-> 更新：2026-07-03 18:10 | Reasonix / Copilot / Claude 三方唯一记忆文件
+> 更新：2026-07-09 09:56 | Reasonix / Copilot / Claude 三方唯一记忆文件
 
 ---
 
@@ -58,12 +58,13 @@
 | 项目 | 路径 |
 |------|------|
 | 工作空间 | `D:\Reasonix_Workspace\` |
+| Git 仓库（本地） | `D:\Reasonix_Workspace\`（工作空间根目录本身即 git 仓库） |
+| Git 仓库（远程） | `github.com/L-SKstart/LS-King_code` |
+| Git 分支（本地） | `workspace` |
+| Git 分支（远端） | `workspace`、`workspace-backup` |
+| Git 认证 | Token 嵌入 `.git/config` 远程 URL 中 |
 | OSS同步脚本 | `scripts/shell/oss_sync_process.sh` |
 | OSS解压脚本 | `scripts/shell/oss_extract_process.sh` |
-| Git 仓库（本地） | `D:\Reasonix_Workspace\LS-King_code\` |
-| Git 仓库（远程） | `github.com/L-SKstart/LS-King_code` |
-| Git 分支 | `workspace-backup`（主线） |
-| Git 认证 | Token 嵌入远程 URL 中，详见 `认证信息配置.md` |
 
 ---
 
@@ -73,7 +74,7 @@
 |--------|:--:|:--:|
 | 🤖 Copilot | 1 | 正常 |
 | 🎯 Claude | 0 | 正常 |
-| 🧩 Reasonix | **11** | ⚠️ 超惩罚线（5次）2倍+ |
+| 🧩 Reasonix | **12** | ⚠️ 超惩罚线（5次）2倍+ |
 
 ---
 
