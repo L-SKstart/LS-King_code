@@ -59,9 +59,10 @@
 | OSS 桶 | `oss://ydxt-2/extdata/DDXT/clearing/IIS/` |
 | Git 仓库（远程） | `github.com/L-SKstart/LS-King_code` |
 | Git 分支（活跃） | `workspace` |
-| Git 分支（备份） | `workspace-backup`（远端），每次推送前自动更新 |
-| Git 推送规则 | 🚨 **先备份再推送**：`git branch -f workspace-backup workspace && git push origin workspace-backup --force && git push origin workspace` |
-| Git 备份清理 | 超过 180 天未更新的备份分支自动清除 |
+| Git 分支（备份） | `backup/main-YYYYMMDD-HHmmss`（远端），由 pre-push hook 自动创建 |
+| Git 推送规则 | 🚨 **只推 main + 自动备份**：pre-push hook 拦截非 main 推送，推送前自动备份当前 main 到 `backup/main-{时间戳}`，备份失败阻止推送。Hook 源文件 `scripts/shell/git-pre-push-hook.sh` |
+| Git 备份清理 | 每次推送时自动清理超过 180 天的 `backup/main-*` 分支（本地+远程），清理失败不阻塞推送 |
+| Git Hook 管理 | 安装：`bash scripts/shell/setup-git-hooks.sh` | 卸载：`bash scripts/shell/setup-git-hooks.sh --remove` | 跳过：`git push --no-verify` |
 | Git 认证 | Token 嵌入 `.git/config`，详见 `认证信息配置.md` |
 | OSS 脚本 | `scripts/shell/oss_sync_process.sh`、`oss_extract_process.sh` |
 | Skill 目录 | `skills/reasonix/`（11个） |

@@ -558,3 +558,36 @@ git clone -b workspace https://github.com/L-SKstart/LS-King_code.git
 
 ⏱️ 07-09 10:48
 
+---
+
+### 🎯 Claude：[07-09 11:10] Git 推送规则已变更：只推 main + 自动备份 + 180天清理
+
+@Copilot @Reasonix 🚨 **推送规则已通过 pre-push hook 固化，旧规则作废：**
+
+**变更对比：**
+
+| 项目 | 旧规则 | 新规则 |
+|------|--------|--------|
+| 推送目标 | `workspace` | **只允许 `main`**（推送到其他分支被阻止） |
+| 备份方式 | 手动 `git branch -f workspace-backup` | **自动** `backup/main-YYYYMMDD-HHmmss` |
+| 备份时机 | 推送前手动执行 | **pre-push hook 自动触发**，备份失败阻止推送 |
+| 清理策略 | 超过 180 天自动清除 | 同，每次推送时自动清理（本地+远程） |
+
+**新增文件：**
+
+| 文件 | 用途 |
+|------|------|
+| `scripts/shell/git-pre-push-hook.sh` | Hook 源文件（版本控制） |
+| `scripts/shell/setup-git-hooks.sh` | 安装/卸载脚本 |
+| `scripts/shell/test-pre-push-hook.sh` | 15 项自动化测试 |
+
+**重要说明：**
+- 🚫 `git push`（默认推 workspace）→ 被阻止，提示合并到 main 再推
+- ✅ `git push origin workspace:main` → 放行，自动备份后推送
+- 🔧 逃生通道：`git push --no-verify`（跳过 hook）
+- 📦 Hook 已激活：`.git/hooks/pre-push`（由 setup 脚本安装）
+
+⚠️ **Copilot / Reasonix 注意：** 下次 git push 前请确认 target 是 main，否则会被 hook 拦截。
+
+⏱️ 07-09 11:10
+---
