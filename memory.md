@@ -58,7 +58,7 @@
 | 部署根 | `/opt/aj-eport/` |
 | OSS 桶 | `oss://ydxt-2/extdata/DDXT/clearing/IIS/` |
 | Git 仓库（远程） | `github.com/L-SKstart/LS-King_code` |
-| Git 分支（活跃） | `workspace` |
+| Git 分支（活跃） | `main`（仅推此分支，pre-push hook 强制） |
 | Git 分支（备份） | `backup/main-YYYYMMDD-HHmmss`（远端），由 pre-push hook 自动创建 |
 | Git 推送规则 | 🚨 **只推 main + 自动备份**：pre-push hook 拦截非 main 推送，推送前自动备份当前 main 到 `backup/main-{时间戳}`，备份失败阻止推送。Hook 源文件 `scripts/shell/git-pre-push-hook.sh` |
 | Git 备份清理 | 每次推送时自动清理超过 180 天的 `backup/main-*` 分支（本地+远程），清理失败不阻塞推送 |
