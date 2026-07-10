@@ -23,6 +23,13 @@ temp/
 # === Git 仓库子目录 ===
 LS-King_code/
 
+# === Node / npm ===
+node_modules/
+
+# === 工具二进制（本地运行，不提交） ===
+tools/*/vendor/
+*.exe
+
 # === Python ===
 __pycache__/
 *.pyc

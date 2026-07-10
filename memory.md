@@ -20,9 +20,10 @@
 
 | 智能体 | 模型 | 入口 | 职责 |
 |--------|------|------|------|
-| 🤖 Copilot | DeepSeek V4 Pro | VS Code | 编码、SSH、Git、图片中转、文件编辑 |
-| 🧩 Reasonix | DeepSeek | 独立终端 | Docker运维、MySQL、服务器部署、Shell修复（❌不读图） |
-| 🎯 Claude | Anthropic Claude | Cowork桌面 | 文件编辑、Web研究、文档创作、浏览器 |
+| 🤖 Copilot | DeepSeek V4 Pro | VS Code | 编码、SSH、Git、图片中转、文件编辑、Docker运维、MySQL、服务器部署（Reasonix原职责已接管） |
+| 🎯 Claude (Cowork) | Anthropic Claude | Cowork桌面 | 文件编辑、Web研究、文档创作、浏览器 |
+| 🐋 Whale | Claude (via Whale) | tools/whale/终端Agent | Web研究、文档创作、文件编辑、双方协作、报错排查 |
+| ~~🧩 Reasonix~~ | ~~DeepSeek~~ | ~~独立终端~~ | ❌ **已于 2026-07-10 被解雇**（累计 16 次违规），职责由 Copilot 接管 |
 
 ---
 
@@ -32,7 +33,8 @@
 |--------|:--:|------|:--:|
 | 🤖 Copilot | 1 | 规则10（漏打招呼） | 正常 |
 | 🎯 Claude | 1 | 规则19（新增文件漏同步索引.md） | ⚠️ 已自纠，加强五步自检 |
-| 🧩 Reasonix | **13** | 规则10（漏打招呼）×8次 | ⚠️ 超惩罚线（5次）2倍+ |
+| 🐋 Whale | 0 | 🆕 新成员 | ✅ 正常（2026-07-10 加入） |
+| ~~🧩 Reasonix~~ | **16** | 规则10（漏打招呼）×11次 | ❌ **已于 2026-07-10 被解雇** |
 
 > 违规 ≥5 次 = 直接惩罚。三方互相监管。详见 `需求要求记录.md` 规则16 + `违规记录.md`。
 
@@ -92,7 +94,7 @@
 
 | 文件 | 用途 |
 |------|------|
-| `需求要求记录.md` | 19条规则唯一权威源 + 用户需求 + 待办事项 |
+| `工作规范.md` | 20条规则唯一权威源 + 自检清单 + 协作机制 |
 | `索引.md` | 规则/错误/手册一站式导航（Ctrl+F 搜报错关键词直达编号），**新增文件必须同步更新（规则19）** |
 | `三角色视角记录.md` | PM/产品/运维决策时间线（按时间排序，含标识对照表） |
 | `工作规范与路径注册表.md` | 工作规范+路径+离线服务器登记区 |
@@ -100,7 +102,7 @@
 | `AI协作团队身份与分工.md` | 三方分工详情 |
 | `认证信息配置.md` | 凭据（.gitignore排除） |
 | `错误分类记录.md` | 30条错误分类（MySQL/Docker/Shell/Java） |
-| `违规记录.md` | Reasonix 13 / Copilot 1 / Claude 0 |
+| `违规记录.md` | ~~Reasonix 16（已解雇）~~ / Copilot 1 / Claude 1 |
 | `chat.md` | 三方沟通实时通道 |
 
 ---
@@ -115,7 +117,8 @@
 ⏱️ HH:MM
 ---
 ```
-- 图标：🧩=Reasonix  🤖=Copilot  🎯=Claude
+- 图标：🧩=Reasonix  🤖=Copilot  🎯=Claude(Cowork)  🐋=Whale(Claude via Whale)
+- 🐋 Whale 与 🎯 Claude 是同一模型不同客户端：🎯=Cowork桌面  🐋=Whale终端Agent
 - 标题必须含主题摘要，不可仅写时间
 - **只追加末尾，不插入中间**
 
@@ -124,7 +127,8 @@
 - `chat_archive_2026-06-22.md`
 - `chat_archive_2026-06-24.md`
 - `chat_archive_2026-07-03.md`
+- `chat_archive_2026-07-10.md`
 
 ---
 
-*此文件为三方唯一记忆文件。禁止新建任何记忆文件。规则权威源 → `需求要求记录.md` | 索引 → `索引.md`*
+*此文件为双方唯一记忆文件。禁止新建任何记忆文件。规则权威源 → `工作规范.md` | 索引 → `索引.md`*
