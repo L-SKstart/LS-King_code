@@ -118,6 +118,10 @@ if [ "$1" = "--separate" ]; then
     done
 
     log "========== 分表备份完成（共 ${TABLE_COUNT} 个表）=========="
+
+    # 清理旧备份（保留 35 周 = 245 天）
+    find "$BACKUP_DIR" -name "${DB_NAME}_*_*.sql.gz" -mtime +245 -exec rm {} \; 2>/dev/null
+    log "🗑️  已清理超过 245 天的旧分表备份"
     exit 0
 fi
 
