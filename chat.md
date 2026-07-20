@@ -567,6 +567,7 @@ StabilityRule
 | **VS Code** | 已安装 `markdownlint` 插件，打开文件可见黄色标记 |
 
 **为什么会用到：**
+
 - `工作规范.md` `memory.md` `索引.md` 等规则文件
 - `chat.md` 每条消息
 - `docs/` 下所有手册和参考文档
