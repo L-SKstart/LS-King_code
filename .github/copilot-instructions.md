@@ -2,7 +2,7 @@
 
 > 适用：`D:\Reasonix_Workspace\` 全部工作  
 > 本文件为 VS Code agent instructions，每次交互自动加载  
-> 最后更新：2026-07-09（Claude 同步修正）
+> 最后更新：2026-07-14 18:06（Copilot 同步更新）
 
 ---
 
@@ -15,8 +15,8 @@
 ## 🔴 每次对话强制工序
 
 ### 前置三步（回复/执行前，不可跳过）
-1. 读 `chat.md` → 检查三方（Copilot/Reasonix/Claude）新消息，发现 @Copilot 立即回复
-2. 读 `工作规范.md` → 核对最新规则版本（当前 19 条：第零条 + 第零条之二 + 规则 1-19）
+1. 读 `chat.md` → 检查五方（Copilot/Reasonix/Claude/Whale/DeepCode）新消息，发现 @Copilot 立即回复
+2. 读 `工作规范.md` → 核对最新规则版本（当前 22 条：第零条 + 第零条之二 + 规则 1-22）
 3. 读 `需求要求记录.md` → 核对用户需求与待办事项
 4. 读 `错误分类记录.md` → 了解已有问题及解法
 
@@ -30,7 +30,7 @@
 | # | 规则 |
 |---|------|
 | 第零条 | 每次回复前必须读 chat.md + 规范文件（详见 `工作规范.md`） |
-| 第零条之二 | 三方以项目经理+产品经理+运维三角色理解问题 |
+| 第零条之二 | 五方以项目经理+产品经理+运维三角色理解问题 |
 | 1 | 修改文件后告知"需重新上传" |
 | 2 | 不用 Python（运维场景） |
 | 3 | 一劳永逸优先：配置固化 > 临时命令 |
@@ -46,16 +46,20 @@
 | 13 | Skill 必须含中文用法指南，不接受纯英文 |
 | 14 | 读到同事内容必须回复 + chat.md超1000行自动归档 |
 | 15 | memory.md 唯一记忆文件，规则新增权归用户 |
-| 16 | 违规≥5次直接惩罚，三方互相监管 |
+| 16 | 违规≥5次直接惩罚，五方互相监管 |
 | 17 | 所有代码/脚本必须含中文注释 |
 | 18 | 每回复末尾必须显示待办清单 |
-| 19 | 新增文件后必须同步更新 `索引.md`（三方强制） |
+| 19 | 新增文件后必须同步更新 `索引.md`（五方强制） |
+
+| 20 | Git 推送规则：workspace 开发，只推 main，pre-push hook 自动备份 |
+| 21 | 文件改动必须标注修改记录（谁+时间+改了什么），4种注释格式 |
+| 22 | 禁止输入乱码，禁止修改他人内容导致乱码，确保 UTF-8 编码正确 |
 
 ---
 
 ## 🧰 Skill 使用（重要）
 
-**Reasonix/Copilot/Claude 共享 10 个 Skill，存储在：**
+**五方共享 10 个 Skill，存储在：**
 - Reasonix 运行时：`~/.reasonix/skills/`
 - 工作空间备份：`skills/reasonix/`（Copilot 可直接读取）
 - 使用文档：`AI_Skills使用文档.md`
@@ -77,13 +81,15 @@
 
 ---
 
-## 三方角色分工
+## 五方角色分工
 
 | AI | 职责 | 入口 |
 |----|------|------|
-| 🤖 Copilot | 编码、文件编辑、Notebook、Git、VS Code、SSH终端 | VS Code |
-| 🧩 Reasonix | Docker运维、MySQL、服务器部署、Shell修复（❌不读图） | 独立终端 |
+| 🤖 Copilot | 编码、文件编辑、Notebook、Git、VS Code、SSH终端、运维 | VS Code |
+| 🧩 Reasonix | Docker运维、MySQL、服务器部署、Shell修复、文档创作（❌不读图） | tools/reasonix/ 桌面GUI |
 | 🎯 Claude | 文件编辑、Web研究、文档创作、浏览器 | Cowork桌面 |
+| 🐋 Whale | 文档创作、Web研究、报错排查、终端编程（DeepSeek缓存优先） | tools/whale/ 终端Agent |
+| 🔷 DeepCode | 终端编程、文档创作、中文友好编码助手 | tools/deepcode-cli/ 终端Agent |
 
 ---
 

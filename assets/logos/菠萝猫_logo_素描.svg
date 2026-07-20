@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 550" width="500" height="550">
+  <!-- 素描风格 - 铅笔速写 -->
+  
+  <!-- 纸张纹理背景 -->
+  <rect width="500" height="550" fill="#F5F0E8"/>
+  <rect width="500" height="550" fill="url(#paper)" opacity="0.3"/>
+  <defs>
+    <filter id="sketch">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <pattern id="paper" width="4" height="4" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="0.5" fill="#D4C9A8" opacity="0.2"/>
+    </pattern>
+  </defs>
+
+  <!-- 圆形边框（手绘感） -->
+  <circle cx="250" cy="270" r="225" fill="none" stroke="#3A3A3A" stroke-width="2.5" 
+    stroke-dasharray="1200" stroke-dashoffset="0" opacity="0.15"/>
+  <circle cx="250" cy="270" r="225" fill="none" stroke="#3A3A3A" stroke-width="1.8" opacity="0.3"/>
+
+  <!-- ========== 猫 — 铅笔素描 ========== -->
+  <g transform="translate(250,260)" filter="url(#sketch)">
+    
+    <!-- 尾巴（先从左边画） -->
+    <path d="M-60,30 Q-100,50 -110,20 Q-120,-20 -95,-50 Q-80,-65 -65,-40"
+      fill="none" stroke="#3A3A3A" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- 尾巴加重线 -->
+    <path d="M-60,30 Q-100,50 -110,20 Q-120,-20 -95,-50"
+      fill="none" stroke="#3A3A3A" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
+
+    <!-- 身体轮廓 -->
+    <path d="M-40,-100 Q-55,-60 -55,-20 Q-55,40 -40,70 Q-20,85 0,85 Q20,85 40,70 Q55,40 55,-20 Q55,-60 40,-100"
+      fill="none" stroke="#3A3A3A" stroke-width="2.2" stroke-linecap="round"/>
+    <!-- 身体阴影排线 -->
+    <path d="M-35,-80 Q-45,-40 -45,0" fill="none" stroke="#3A3A3A" stroke-width="0.8" opacity="0.4"/>
+    <path d="M-30,-70 Q-38,-35 -38,10" fill="none" stroke="#3A3A3A" stroke-width="0.8" opacity="0.3"/>
+    <path d="M35,-80 Q45,-40 45,0" fill="none" stroke="#3A3A3A" stroke-width="0.8" opacity="0.4"/>
+    <path d="M30,-70 Q38,-35 38,10" fill="none" stroke="#3A3A3A" stroke-width="0.8" opacity="0.3"/>
+
+    <!-- 后腿 -->
+    <path d="M-35,70 Q-40,95 -35,110 Q-30,118 -20,118 Q-10,118 -5,110 Q-2,100 -5,85"
+      fill="none" stroke="#3A3A3A" stroke-width="2" stroke-linecap="round"/>
+    <path d="M35,70 Q40,95 35,110 Q30,118 20,118 Q10,118 5,110 Q2,100 5,85"
+      fill="none" stroke="#3A3A3A" stroke-width="2" stroke-linecap="round"/>
+    <!-- 后腿排线阴影 -->
+    <path d="M-28,80 Q-32,100 -28,112" fill="none" stroke="#3A3A3A" stroke-width="0.7" opacity="0.3"/>
+    <path d="M28,80 Q32,100 28,112" fill="none" stroke="#3A3A3A" stroke-width="0.7" opacity="0.3"/>
+
+    <!-- 左前爪（举起） -->
+    <path d="M-40,-50 Q-55,-80 -50,-110 Q-48,-120 -40,-120 Q-32,-120 -30,-110"
+      fill="none" stroke="#3A3A3A" stroke-width="2" stroke-linecap="round"/>
+    <!-- 爪垫 -->
+    <path d="M-38,-118 Q-35,-114 -33,-116" fill="none" stroke="#3A3A3A" stroke-width="1.2"/>
+    <circle cx="-38" cy="-116" r="1.5" fill="#3A3A3A"/>
+    <circle cx="-33" cy="-116" r="1.5" fill="#3A3A3A"/>
+    <circle cx="-35.5" cy="-112" r="2" fill="#3A3A3A"/>
+
+    <!-- 右前爪（举起） -->
+    <path d="M40,-50 Q55,-80 50,-110 Q48,-120 40,-120 Q32,-120 30,-110"
+      fill="none" stroke="#3A3A3A" stroke-width="2" stroke-linecap="round"/>
+    <!-- 爪垫 -->
+    <path d="M38,-118 Q35,-114 33,-116" fill="none" stroke="#3A3A3A" stroke-width="1.2"/>
+    <circle cx="38" cy="-116" r="1.5" fill="#3A3A3A"/>
+    <circle cx="33" cy="-116" r="1.5" fill="#3A3A3A"/>
+    <circle cx="35.5" cy="-112" r="2" fill="#3A3A3A"/>
+
+    <!-- ===== 头部 ===== -->
+    <!-- 头部轮廓 -->
+    <path d="M-45,-100 Q-50,-125 -40,-145 Q-25,-165 0,-168 Q25,-165 40,-145 Q50,-125 45,-100"
+      fill="none" stroke="#3A3A3A" stroke-width="2.2" stroke-linecap="round"/>
+    
+    <!-- 左耳 -->
+    <path d="M-38,-138 L-50,-170 L-25,-155" fill="none" stroke="#3A3A3A" stroke-width="2" stroke-linecap="round"/>
+    <!-- 右耳 -->
+    <path d="M38,-138 L50,-170 L25,-155" fill="none" stroke="#3A3A3A" stroke-width="2" stroke-linecap="round"/>
+    <!-- 内耳 -->
+    <path d="M-36,-140 L-44,-162 L-28,-152" fill="none" stroke="#3A3A3A" stroke-width="0.8" opacity="0.5"/>
+    <path d="M36,-140 L44,-162 L28,-152" fill="none" stroke="#3A3A3A" stroke-width="0.8" opacity="0.5"/>
+
+    <!-- 眼睛 -->
+    <path d="M-25,-130 Q-20,-135 -15,-130" fill="none" stroke="#3A3A3A" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M15,-130 Q20,-135 25,-130" fill="none" stroke="#3A3A3A" stroke-width="1.8" stroke-linecap="round"/>
+    <!-- 瞳孔 -->
+    <ellipse cx="-20" cy="-131" rx="3" ry="4" fill="#3A3A3A"/>
+    <ellipse cx="20" cy="-131" rx="3" ry="4" fill="#3A3A3A"/>
+    <!-- 眼睛高光 -->
+    <circle cx="-19" cy="-133" r="1.2" fill="#F5F0E8"/>
+    <circle cx="21" cy="-133" r="1.2" fill="#F5F0E8"/>
+
+    <!-- 鼻子 -->
+    <path d="M-4,-120 Q0,-117 4,-120" fill="none" stroke="#3A3A3A" stroke-width="1.5" stroke-linecap="round"/>
+    
+    <!-- 嘴巴 -->
+    <path d="M0,-117 Q-8,-112 -12,-115" fill="none" stroke="#3A3A3A" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M0,-117 Q8,-112 12,-115" fill="none" stroke="#3A3A3A" stroke-width="1.2" stroke-linecap="round"/>
+
+    <!-- 胡须 -->
+    <line x1="-15" y1="-120" x2="-45" y2="-125" stroke="#3A3A3A" stroke-width="0.8" opacity="0.6"/>
+    <line x1="-15" y1="-118" x2="-45" y2="-115" stroke="#3A3A3A" stroke-width="0.8" opacity="0.6"/>
+    <line x1="-15" y1="-115" x2="-42" y2="-108" stroke="#3A3A3A" stroke-width="0.8" opacity="0.6"/>
+    <line x1="15" y1="-120" x2="45" y2="-125" stroke="#3A3A3A" stroke-width="0.8" opacity="0.6"/>
+    <line x1="15" y1="-118" x2="45" y2="-115" stroke="#3A3A3A" stroke-width="0.8" opacity="0.6"/>
+    <line x1="15" y1="-115" x2="42" y2="-108" stroke="#3A3A3A" stroke-width="0.8" opacity="0.6"/>
+
+    <!-- 头部排线（表现毛发质感） -->
+    <path d="M-30,-150 Q-20,-158 0,-160" fill="none" stroke="#3A3A3A" stroke-width="0.6" opacity="0.3"/>
+    <path d="M30,-150 Q20,-158 0,-160" fill="none" stroke="#3A3A3A" stroke-width="0.6" opacity="0.3"/>
+    <path d="M-35,-145 Q-30,-155 -20,-158" fill="none" stroke="#3A3A3A" stroke-width="0.6" opacity="0.3"/>
+    <path d="M35,-145 Q30,-155 20,-158" fill="none" stroke="#3A3A3A" stroke-width="0.6" opacity="0.3"/>
+    
+    <!-- 身体绒毛排线 -->
+    <path d="M-50,-30 Q-52,-25 -48,-20" fill="none" stroke="#3A3A3A" stroke-width="0.6" opacity="0.25"/>
+    <path d="M-52,-15 Q-54,-10 -50,-5" fill="none" stroke="#3A3A3A" stroke-width="0.6" opacity="0.25"/>
+    <path d="M50,-30 Q52,-25 48,-20" fill="none" stroke="#3A3A3A" stroke-width="0.6" opacity="0.25"/>
+    <path d="M52,-15 Q54,-10 50,-5" fill="none" stroke="#3A3A3A" stroke-width="0.6" opacity="0.25"/>
+
+    <!-- ===== 粉色玩具 ===== -->
+    <!-- 玩具轮廓 -->
+    <path d="M-15,-105 Q-25,-100 -28,-92 Q-30,-82 -22,-78 Q-15,-75 -8,-80 Q0,-85 2,-92 Q4,-100 -2,-105 Z"
+      fill="none" stroke="#3A3A3A" stroke-width="1.8" stroke-linecap="round"/>
+    <!-- 玩具纹理 -->
+    <path d="M-20,-90 Q-15,-88 -10,-90" fill="none" stroke="#3A3A3A" stroke-width="0.8" opacity="0.4"/>
+    <path d="M-18,-85 Q-13,-83 -8,-85" fill="none" stroke="#3A3A3A" stroke-width="0.8" opacity="0.4"/>
+    <!-- 玩具标签/绳子 -->
+    <path d="M-22,-78 Q-25,-70 -22,-65" fill="none" stroke="#3A3A3A" stroke-width="1" stroke-linecap="round"/>
+    <rect x="-26" y="-62" width="8" height="6" rx="1" fill="none" stroke="#3A3A3A" stroke-width="0.8"/>
+
+  </g>
+
+  <!-- ===== 文字 ===== -->
+  <!-- "菠萝" 手写感 -->
+  <text x="250" y="510" text-anchor="middle" font-size="32" 
+    font-family="'KaiTi','STKaiti','SimSun','serif'" fill="#3A3A3A" 
+    letter-spacing="4">菠萝</text>
+  
+  <!-- 英文 subtitle 手写感 -->
+  <text x="250" y="530" text-anchor="middle" font-size="11" 
+    font-family="'Bradley Hand','Comic Sans MS','cursive'" fill="#777" 
+    letter-spacing="3">BOLUO</text>
+
+  <!-- 签名装饰线 -->
+  <path d="M180,515 Q215,512 220,515" fill="none" stroke="#3A3A3A" stroke-width="0.8" opacity="0.3"/>
+  <path d="M280,515 Q285,512 320,515" fill="none" stroke="#3A3A3A" stroke-width="0.8" opacity="0.3"/>
+
+  <!-- 角落装饰 - 小菠萝 -->
+  <g transform="translate(60,60)" opacity="0.08">
+    <text font-size="30" fill="#3A3A3A">🍍</text>
+  </g>
+  <g transform="translate(420,470)" opacity="0.08">
+    <text font-size="24" fill="#3A3A3A">🍍</text>
+  </g>
+</svg>

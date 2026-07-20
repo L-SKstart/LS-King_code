@@ -35,7 +35,22 @@ __pycache__/
 *.pyc
 venv/
 
-skills/reasonix**
 # 含凭据的 skill（仅限本机使用）
 skills/reasonix/diagnose/
 skills/reasonix/deploy-check/
+
+# === Reasonix 桌面端数据（含会话/记忆/凭据，不上传） ===
+.reasonix_data/
+
+# === 环境变量凭据 ===
+.env
+
+# === 工作空间模板导出 ===
+template.zip
+
+# === 二进制工具目录 ===
+tools/reasonix/
+tools/deepcode-cli/node_modules/
+
+# === 大文件下载 ===
+assets/downloads/

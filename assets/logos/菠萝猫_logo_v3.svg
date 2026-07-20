@@ -1,0 +1,241 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <defs>
+    <!-- 金渐层毛色渐变 -->
+    <radialGradient id="furGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#E8C88A"/>
+      <stop offset="60%" stop-color="#D4A860"/>
+      <stop offset="100%" stop-color="#B88940"/>
+    </radialGradient>
+    <radialGradient id="furLight" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#F0D8A8"/>
+      <stop offset="50%" stop-color="#E0C080"/>
+      <stop offset="100%" stop-color="#C8A060"/>
+    </radialGradient>
+    <radialGradient id="bodyGrad" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#E0C080"/>
+      <stop offset="60%" stop-color="#C8A060"/>
+      <stop offset="100%" stop-color="#A88040"/>
+    </radialGradient>
+    <radialGradient id="bellyGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F0DCC0"/>
+      <stop offset="100%" stop-color="#E0C8A0"/>
+    </radialGradient>
+    <radialGradient id="eyeGrad" cx="40%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#90C068"/>
+      <stop offset="100%" stop-color="#4A8030"/>
+    </radialGradient>
+    <!-- 毛茸茸边缘滤镜 -->
+    <filter id="fluffy">
+      <feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="4" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="soft">
+      <feGaussianBlur stdDeviation="1.5"/>
+    </filter>
+    <filter id="pencil">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <!-- 暖白底色 -->
+  <rect width="600" height="600" fill="#F5F0E8"/>
+
+  <!-- 圆形徽章外框 -->
+  <circle cx="300" cy="300" r="280" fill="none" stroke="#D4C0A0" stroke-width="1.5" opacity="0.3"/>
+  <circle cx="300" cy="300" r="276" fill="none" stroke="#C8B090" stroke-width="0.8" opacity="0.2"/>
+
+  <!-- ============================================================ -->
+  <!-- 菠萝 — 矮脚金渐层 -->
+  <!-- 特征：圆脸圆身、短腿、金棕色皮毛、大圆眼、竖耳站立举爪 -->
+  <!-- ============================================================ -->
+  <g transform="translate(300, 290)">
+
+    <!-- ==== 尾巴 ==== -->
+    <path d="M-70,50 Q-115,60 -130,25 Q-140,-10 -118,-40 Q-102,-60 -85,-42" 
+          fill="none" stroke="#B88940" stroke-width="10" stroke-linecap="round"/>
+    <path d="M-70,50 Q-110,58 -125,25 Q-135,-5 -118,-35" 
+          fill="none" stroke="#D4A860" stroke-width="6" stroke-linecap="round"/>
+    <!-- 尾巴尖毛 -->
+    <path d="M-118,-40 Q-112,-52 -100,-48" fill="none" stroke="#B88940" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- ==== 身体 — 金渐层圆润身 ==== -->
+    <!-- 身体主体 -->
+    <ellipse cx="0" cy="55" rx="72" ry="78" fill="url(#bodyGrad)"/>
+    <!-- 身体高光 -->
+    <ellipse cx="-15" cy="30" rx="45" ry="50" fill="url(#furLight)" opacity="0.5"/>
+    <!-- 腹部浅色 -->
+    <ellipse cx="0" cy="80" rx="48" ry="45" fill="url(#bellyGrad)" opacity="0.7"/>
+    <!-- 身体轮廓线 -->
+    <ellipse cx="0" cy="55" rx="72" ry="78" fill="none" stroke="#A07838" stroke-width="1.8" opacity="0.6"/>
+
+    <!-- ==== 后腿（矮脚特征） ==== -->
+    <!-- 左后腿 — 短粗 -->
+    <ellipse cx="-38" cy="130" rx="24" ry="18" fill="#B88940"/>
+    <ellipse cx="-38" cy="126" rx="20" ry="14" fill="#C8A060"/>
+    <!-- 左后脚 -->
+    <ellipse cx="-38" cy="143" rx="20" ry="10" fill="#D4A860"/>
+    <ellipse cx="-38" cy="145" rx="18" ry="8" fill="#DCC090"/>
+    <ellipse cx="-38" cy="143" rx="20" ry="10" fill="none" stroke="#A07838" stroke-width="1.2" opacity="0.5"/>
+    <!-- 脚趾 -->
+    <circle cx="-45" cy="146" r="2.5" fill="#A07838" opacity="0.4"/>
+    <circle cx="-38" cy="148" r="2.5" fill="#A07838" opacity="0.4"/>
+    <circle cx="-31" cy="146" r="2.5" fill="#A07838" opacity="0.4"/>
+
+    <!-- 右后腿 — 短粗 -->
+    <ellipse cx="38" cy="130" rx="24" ry="18" fill="#B88940"/>
+    <ellipse cx="38" cy="126" rx="20" ry="14" fill="#C8A060"/>
+    <ellipse cx="38" cy="143" rx="20" ry="10" fill="#D4A860"/>
+    <ellipse cx="38" cy="145" rx="18" ry="8" fill="#DCC090"/>
+    <ellipse cx="38" cy="143" rx="20" ry="10" fill="none" stroke="#A07838" stroke-width="1.2" opacity="0.5"/>
+    <circle cx="31" cy="146" r="2.5" fill="#A07838" opacity="0.4"/>
+    <circle cx="38" cy="148" r="2.5" fill="#A07838" opacity="0.4"/>
+    <circle cx="45" cy="146" r="2.5" fill="#A07838" opacity="0.4"/>
+
+    <!-- ==== 前爪（举起）==== -->
+    <!-- 左前爪 — 短且举起 -->
+    <path d="M-55,-10 Q-72,-35 -65,-70 Q-60,-85 -48,-85 Q-38,-85 -36,-70" 
+          fill="url(#furGrad)" stroke="#A07838" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- 左爪肉垫 -->
+    <ellipse cx="-50" cy="-80" rx="9" ry="7" fill="#D4A860"/>
+    <circle cx="-47" cy="-83" r="2" fill="#C08070"/>
+    <circle cx="-53" cy="-83" r="2" fill="#C08070"/>
+    <ellipse cx="-50" cy="-77" rx="3.5" ry="2.5" fill="#C08070"/>
+
+    <!-- 右前爪 — 短且举起 -->
+    <path d="M55,-10 Q72,-35 65,-70 Q60,-85 48,-85 Q38,-85 36,-70" 
+          fill="url(#furGrad)" stroke="#A07838" stroke-width="1.5" stroke-linecap="round"/>
+    <ellipse cx="50" cy="-80" rx="9" ry="7" fill="#D4A860"/>
+    <circle cx="47" cy="-83" r="2" fill="#C08070"/>
+    <circle cx="53" cy="-83" r="2" fill="#C08070"/>
+    <ellipse cx="50" cy="-77" rx="3.5" ry="2.5" fill="#C08070"/>
+
+    <!-- ==== 头部 — 金渐层标准圆脸 ==== -->
+    <!-- 头部底色 -->
+    <ellipse cx="0" cy="-90" rx="76" ry="68" fill="url(#furGrad)"/>
+    <!-- 头部高光 -->
+    <ellipse cx="-10" cy="-105" rx="50" ry="42" fill="url(#furLight)" opacity="0.4"/>
+    <!-- 头部轮廓 -->
+    <ellipse cx="0" cy="-90" rx="76" ry="68" fill="none" stroke="#A07838" stroke-width="1.8" opacity="0.5"/>
+
+    <!-- 脸颊（金渐层特有的肉脸） -->
+    <ellipse cx="-30" cy="-72" rx="32" ry="28" fill="#E0C080" opacity="0.3"/>
+    <ellipse cx="30" cy="-72" rx="32" ry="28" fill="#E0C080" opacity="0.3"/>
+
+    <!-- ==== 耳朵 — 小圆耳 ==== -->
+    <!-- 左耳 -->
+    <path d="M-52,-142 L-68,-185 L-30,-158" fill="url(#furGrad)" stroke="#A07838" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- 左耳内部 -->
+    <path d="M-50,-148 L-60,-175 L-35,-158" fill="#E0A090" opacity="0.6"/>
+    <path d="M-48,-150 L-56,-172 L-36,-160" fill="#D09080" opacity="0.4"/>
+
+    <!-- 右耳 -->
+    <path d="M52,-142 L68,-185 L30,-158" fill="url(#furGrad)" stroke="#A07838" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M50,-148 L60,-175 L35,-158" fill="#E0A090" opacity="0.6"/>
+    <path d="M48,-150 L56,-172 L36,-160" fill="#D09080" opacity="0.4"/>
+
+    <!-- ==== 耳朵周围绒毛 ==== -->
+    <path d="M-68,-180 Q-72,-175 -70,-170" fill="none" stroke="#D4A860" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M68,-180 Q72,-175 70,-170" fill="none" stroke="#D4A860" stroke-width="1.5" stroke-linecap="round"/>
+
+    <!-- ==== 眼睛 — 大圆眼（金渐层标志）==== -->
+    <!-- 左眼 -->
+    <ellipse cx="-28" cy="-95" rx="18" ry="19" fill="#F0E8D0"/>
+    <ellipse cx="-28" cy="-95" rx="18" ry="19" fill="none" stroke="#6A5A3A" stroke-width="1.5"/>
+    <ellipse cx="-28" cy="-95" rx="13" ry="14" fill="url(#eyeGrad)"/>
+    <ellipse cx="-28" cy="-95" rx="6" ry="8" fill="#1A1A1A"/>
+    <!-- 左眼高光 -->
+    <circle cx="-23" cy="-100" r="4" fill="white" opacity="0.9"/>
+    <circle cx="-32" cy="-92" r="2" fill="white" opacity="0.5"/>
+
+    <!-- 右眼 -->
+    <ellipse cx="28" cy="-95" rx="18" ry="19" fill="#F0E8D0"/>
+    <ellipse cx="28" cy="-95" rx="18" ry="19" fill="none" stroke="#6A5A3A" stroke-width="1.5"/>
+    <ellipse cx="28" cy="-95" rx="13" ry="14" fill="url(#eyeGrad)"/>
+    <ellipse cx="28" cy="-95" rx="6" ry="8" fill="#1A1A1A"/>
+    <!-- 右眼高光 -->
+    <circle cx="33" cy="-100" r="4" fill="white" opacity="0.9"/>
+    <circle cx="24" cy="-92" r="2" fill="white" opacity="0.5"/>
+
+    <!-- ==== 鼻子 ==== -->
+    <!-- 小三角鼻 -->
+    <path d="M-6,-78 L6,-78 L0,-73 Z" fill="#D08070" stroke="#A06050" stroke-width="1" stroke-linejoin="round"/>
+
+    <!-- ==== 嘴巴 ==== -->
+    <path d="M0,-73 L0,-67" stroke="#6A5A3A" stroke-width="1.2" fill="none"/>
+    <path d="M-10,-70 Q0,-62 0,-67" stroke="#6A5A3A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <path d="M10,-70 Q0,-62 0,-67" stroke="#6A5A3A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+
+    <!-- ==== 胡须 ==== -->
+    <line x1="-18" y1="-80" x2="-60" y2="-88" stroke="#C8B090" stroke-width="0.8" opacity="0.6"/>
+    <line x1="-18" y1="-75" x2="-62" y2="-72" stroke="#C8B090" stroke-width="0.8" opacity="0.6"/>
+    <line x1="-18" y1="-70" x2="-58" y2="-60" stroke="#C8B090" stroke-width="0.8" opacity="0.6"/>
+    <line x1="18" y1="-80" x2="60" y2="-88" stroke="#C8B090" stroke-width="0.8" opacity="0.6"/>
+    <line x1="18" y1="-75" x2="62" y2="-72" stroke="#C8B090" stroke-width="0.8" opacity="0.6"/>
+    <line x1="18" y1="-70" x2="58" y2="-60" stroke="#C8B090" stroke-width="0.8" opacity="0.6"/>
+
+    <!-- ==== 粉色玩具 ==== -->
+    <!-- 玩具主体 — 在爪子之间、嘴巴前方 -->
+    <ellipse cx="0" cy="-55" rx="22" ry="16" fill="#F0A0B0" transform="rotate(-8,0,-55)"/>
+    <ellipse cx="-3" cy="-57" rx="14" ry="10" fill="#F5B8C5" transform="rotate(-8,0,-55)"/>
+    <!-- 玩具条纹 -->
+    <line x1="-10" y1="-60" x2="10" y2="-60" stroke="#E88898" stroke-width="1.5" opacity="0.5" transform="rotate(-8,0,-55)"/>
+    <line x1="-8" y1="-54" x2="8" y2="-54" stroke="#E88898" stroke-width="1.5" opacity="0.5" transform="rotate(-8,0,-55)"/>
+    <!-- 玩具标签 -->
+    <path d="M16,-52 Q20,-44 18,-38" fill="none" stroke="#D06070" stroke-width="1.5" stroke-linecap="round"/>
+    <rect x="14" y="-36" width="8" height="6" rx="1.5" fill="#D06070"/>
+
+    <!-- ==== 金渐层特有的毛尖色 ==== -->
+    <!-- 头顶毛尖深色 -->
+    <path d="M-15,-152 Q0,-158 15,-152" fill="none" stroke="#B88940" stroke-width="1.2" opacity="0.4" stroke-linecap="round"/>
+    <path d="M-8,-150 Q0,-155 8,-150" fill="none" stroke="#C8A060" stroke-width="0.8" opacity="0.3" stroke-linecap="round"/>
+    
+    <!-- 身体毛尖纹理 -->
+    <path d="M-55,20 Q-48,22 -42,18" fill="none" stroke="#B88940" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+    <path d="M-52,35 Q-45,37 -38,33" fill="none" stroke="#B88940" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+    <path d="M-48,50 Q-40,52 -32,48" fill="none" stroke="#B88940" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+    <path d="M55,20 Q48,22 42,18" fill="none" stroke="#B88940" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+    <path d="M52,35 Q45,37 38,33" fill="none" stroke="#B88940" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+    <path d="M48,50 Q40,52 32,48" fill="none" stroke="#B88940" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+
+    <!-- ==== 腮部蓬松绒毛 ==== -->
+    <path d="M-72,-78 Q-78,-72 -75,-65" fill="none" stroke="#D4A860" stroke-width="1.5" opacity="0.4" stroke-linecap="round"/>
+    <path d="M-70,-85 Q-76,-80 -74,-74" fill="none" stroke="#D4A860" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+    <path d="M72,-78 Q78,-72 75,-65" fill="none" stroke="#D4A860" stroke-width="1.5" opacity="0.4" stroke-linecap="round"/>
+    <path d="M70,-85 Q76,-80 74,-74" fill="none" stroke="#D4A860" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+
+    <!-- ==== 身体周围绒毛 ==== -->
+    <path d="M-65,70 Q-70,75 -68,82" fill="none" stroke="#D4A860" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+    <path d="M65,70 Q70,75 68,82" fill="none" stroke="#D4A860" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+
+    <!-- ==== 背景装饰 — 绿色水磨石地面 ==== -->
+    <!-- 底部弧形地面 -->
+    <path d="M-200,155 Q-100,135 0,135 Q100,135 200,155" 
+          fill="none" stroke="#90A880" stroke-width="2" opacity="0.25"/>
+    <path d="M-180,160 Q-90,142 0,142 Q90,142 180,160" 
+          fill="none" stroke="#80A070" stroke-width="1" opacity="0.15"/>
+    
+    <!-- 水磨石小点 -->
+    <circle cx="-120" cy="148" r="2" fill="#A0B890" opacity="0.15"/>
+    <circle cx="-60" cy="140" r="1.5" fill="#C0A080" opacity="0.12"/>
+    <circle cx="40" cy="138" r="2.5" fill="#A0B890" opacity="0.15"/>
+    <circle cx="100" cy="145" r="1.5" fill="#C0A080" opacity="0.12"/>
+    <circle cx="150" cy="155" r="2" fill="#B0A090" opacity="0.12"/>
+    <circle cx="-150" cy="155" r="1.5" fill="#B0A090" opacity="0.12"/>
+
+    <!-- ==== 背景抽象纸箱 ===== -->
+    <!-- 左后纸箱轮廓 -->
+    <rect x="-170" y="-100" width="60" height="70" rx="3" fill="none" stroke="#C8B090" stroke-width="1" opacity="0.12"/>
+    <line x1="-170" y1="-85" x2="-110" y2="-85" stroke="#C8B090" stroke-width="0.8" opacity="0.1"/>
+    <line x1="-170" y1="-70" x2="-110" y2="-70" stroke="#C8B090" stroke-width="0.8" opacity="0.1"/>
+    
+    <!-- 右后纸箱轮廓 -->
+    <rect x="110" y="-110" width="50" height="60" rx="3" fill="none" stroke="#C8B090" stroke-width="1" opacity="0.1"/>
+    <line x1="110" y1="-95" x2="160" y2="-95" stroke="#C8B090" stroke-width="0.8" opacity="0.08"/>
+
+    <!-- ==== 底部装饰菠萝 ==== -->
+    <g transform="translate(0, 172)" opacity="0.12">
+      <text font-size="18" text-anchor="middle" fill="#B88940">🍍</text>
+    </g>
+  </g>
+</svg>

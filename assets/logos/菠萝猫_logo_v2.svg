@@ -1,0 +1,212 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 600" width="500" height="600">
+  <defs>
+    <filter id="pencil">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="paper">
+      <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="3"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feBlend in="SourceGraphic" mode="multiply"/>
+    </filter>
+  </defs>
+
+  <!-- 暖白纸张底色 -->
+  <rect width="500" height="600" fill="#F7F2E9"/>
+
+  <!-- 圆形外框 - 手绘感 -->
+  <circle cx="250" cy="290" r="240" fill="none" stroke="#8B7A6A" stroke-width="1.5" opacity="0.25"/>
+  <circle cx="250" cy="290" r="237" fill="none" stroke="#C4A882" stroke-width="0.8" opacity="0.2"/>
+
+  <!-- ============================================================ -->
+  <!-- 菠萝 —— 棕虎斑猫 简笔画写实风 -->
+  <!-- 根据照片特征：圆脸、虎斑纹、站立举爪、粉色玩具 -->
+  <!-- ============================================================ -->
+  <g transform="translate(250, 285)" filter="url(#pencil)">
+
+    <!-- ==== 身体 ==== -->
+    <!-- 身体主体 — 圆润 -->
+    <path d="M-58,-50 
+             Q-72,-10 -72,35 
+             Q-72,80 -55,100 
+             Q-35,118 0,118 
+             Q35,118 55,100 
+             Q72,80 72,35 
+             Q72,-10 58,-50" 
+          fill="none" stroke="#4A3A2A" stroke-width="2.2" stroke-linecap="round"/>
+    
+    <!-- 身体内侧轮廓（表现圆润感） -->
+    <path d="M-52,-45 Q-65,-5 -65,35 Q-65,75 -50,95" 
+          fill="none" stroke="#4A3A2A" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+    <path d="M52,-45 Q65,-5 65,35 Q65,75 50,95" 
+          fill="none" stroke="#4A3A2A" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+
+    <!-- ==== 后腿 ==== -->
+    <!-- 左后腿 -->
+    <path d="M-40,100 Q-48,125 -45,142 Q-40,152 -28,152 Q-18,152 -14,142 Q-10,128 -12,110" 
+          fill="none" stroke="#4A3A2A" stroke-width="2" stroke-linecap="round"/>
+    <!-- 左后腿内侧 -->
+    <path d="M-35,105 Q-42,125 -40,140" 
+          fill="none" stroke="#4A3A2A" stroke-width="0.8" opacity="0.3"/>
+    <!-- 左后脚趾 -->
+    <path d="M-38,148 Q-36,152 -32,152" fill="none" stroke="#4A3A2A" stroke-width="1"/>
+    <path d="M-28,152 Q-24,152 -22,148" fill="none" stroke="#4A3A2A" stroke-width="1"/>
+
+    <!-- 右后腿 -->
+    <path d="M40,100 Q48,125 45,142 Q40,152 28,152 Q18,152 14,142 Q10,128 12,110" 
+          fill="none" stroke="#4A3A2A" stroke-width="2" stroke-linecap="round"/>
+    <path d="M35,105 Q42,125 40,140" 
+          fill="none" stroke="#4A3A2A" stroke-width="0.8" opacity="0.3"/>
+    <path d="M38,148 Q36,152 32,152" fill="none" stroke="#4A3A2A" stroke-width="1"/>
+    <path d="M28,152 Q24,152 22,148" fill="none" stroke="#4A3A2A" stroke-width="1"/>
+
+    <!-- ==== 尾巴 ==== -->
+    <path d="M-55,50 Q-95,65 -108,35 Q-118,0 -100,-30 Q-88,-50 -72,-35" 
+          fill="none" stroke="#4A3A2A" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- 尾巴加重 -->
+    <path d="M-55,50 Q-90,62 -102,35 Q-112,5 -98,-25" 
+          fill="none" stroke="#4A3A2A" stroke-width="1" opacity="0.4" stroke-linecap="round"/>
+
+    <!-- ==== 前爪（举起） ==== -->
+    <!-- 左前爪 -->
+    <path d="M-45,-30 Q-58,-55 -52,-85 Q-48,-98 -38,-98 Q-28,-98 -26,-85" 
+          fill="none" stroke="#4A3A2A" stroke-width="2" stroke-linecap="round"/>
+    <!-- 左爪爪垫 -->
+    <ellipse cx="-39" cy="-94" rx="8" ry="6" fill="none" stroke="#4A3A2A" stroke-width="1.2"/>
+    <circle cx="-36" cy="-96" r="1.5" fill="#4A3A2A"/>
+    <circle cx="-42" cy="-96" r="1.5" fill="#4A3A2A"/>
+    <ellipse cx="-39" cy="-91" rx="3" ry="2" fill="#4A3A2A"/>
+
+    <!-- 右前爪 -->
+    <path d="M45,-30 Q58,-55 52,-85 Q48,-98 38,-98 Q28,-98 26,-85" 
+          fill="none" stroke="#4A3A2A" stroke-width="2" stroke-linecap="round"/>
+    <ellipse cx="39" cy="-94" rx="8" ry="6" fill="none" stroke="#4A3A2A" stroke-width="1.2"/>
+    <circle cx="36" cy="-96" r="1.5" fill="#4A3A2A"/>
+    <circle cx="42" cy="-96" r="1.5" fill="#4A3A2A"/>
+    <ellipse cx="39" cy="-91" rx="3" ry="2" fill="#4A3A2A"/>
+
+    <!-- ==== 头部 — 圆脸 ==== -->
+    <!-- 头部外轮廓 — 圆形 -->
+    <path d="M-52,-55 Q-58,-85 -45,-110 Q-28,-132 0,-135 Q28,-132 45,-110 Q58,-85 52,-55" 
+          fill="none" stroke="#4A3A2A" stroke-width="2.2" stroke-linecap="round"/>
+    
+    <!-- 脸颊丰满感 -->
+    <path d="M-48,-60 Q-55,-70 -52,-80" fill="none" stroke="#4A3A2A" stroke-width="1" opacity="0.3"/>
+    <path d="M48,-60 Q55,-70 52,-80" fill="none" stroke="#4A3A2A" stroke-width="1" opacity="0.3"/>
+
+    <!-- ==== 耳朵 ==== -->
+    <!-- 左耳 -->
+    <path d="M-38,-118 L-52,-158 L-22,-135" fill="none" stroke="#4A3A2A" stroke-width="2" stroke-linecap="round"/>
+    <!-- 左耳内侧 -->
+    <path d="M-36,-122 L-46,-150 L-26,-133" fill="none" stroke="#4A3A2A" stroke-width="1" opacity="0.4"/>
+    
+    <!-- 右耳 -->
+    <path d="M38,-118 L52,-158 L22,-135" fill="none" stroke="#4A3A2A" stroke-width="2" stroke-linecap="round"/>
+    <path d="M36,-122 L46,-150 L26,-133" fill="none" stroke="#4A3A2A" stroke-width="1" opacity="0.4"/>
+
+    <!-- ==== 眼睛 — 圆润大眼 ==== -->
+    <!-- 左眼 -->
+    <ellipse cx="-22" cy="-112" rx="10" ry="11" fill="none" stroke="#4A3A2A" stroke-width="1.8"/>
+    <ellipse cx="-22" cy="-112" rx="7" ry="8" fill="#4A3A2A"/>
+    <circle cx="-20" cy="-115" r="3" fill="#F7F2E9"/>
+    <circle cx="-24" cy="-110" r="1.5" fill="#F7F2E9" opacity="0.5"/>
+
+    <!-- 右眼 -->
+    <ellipse cx="22" cy="-112" rx="10" ry="11" fill="none" stroke="#4A3A2A" stroke-width="1.8"/>
+    <ellipse cx="22" cy="-112" rx="7" ry="8" fill="#4A3A2A"/>
+    <circle cx="24" cy="-115" r="3" fill="#F7F2E9"/>
+    <circle cx="20" cy="-110" r="1.5" fill="#F7F2E9" opacity="0.5"/>
+
+    <!-- ==== 鼻子 ==== -->
+    <!-- 小三角形鼻 -->
+    <path d="M-5,-98 L5,-98 L0,-94 Z" fill="none" stroke="#4A3A2A" stroke-width="1.5" stroke-linejoin="round"/>
+
+    <!-- ==== 嘴巴 ==== -->
+    <!-- 倒Y形嘴 — 典型猫嘴 -->
+    <path d="M0,-94 L0,-89" fill="none" stroke="#4A3A2A" stroke-width="1.2"/>
+    <path d="M-8,-92 Q0,-86 0,-89" fill="none" stroke="#4A3A2A" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M8,-92 Q0,-86 0,-89" fill="none" stroke="#4A3A2A" stroke-width="1.2" stroke-linecap="round"/>
+
+    <!-- ==== 胡须 ==== -->
+    <!-- 左胡须 -->
+    <line x1="-15" y1="-98" x2="-52" y2="-105" stroke="#4A3A2A" stroke-width="0.8" opacity="0.5"/>
+    <line x1="-15" y1="-94" x2="-54" y2="-92" stroke="#4A3A2A" stroke-width="0.8" opacity="0.5"/>
+    <line x1="-15" y1="-90" x2="-50" y2="-82" stroke="#4A3A2A" stroke-width="0.8" opacity="0.5"/>
+    <!-- 右胡须 -->
+    <line x1="15" y1="-98" x2="52" y2="-105" stroke="#4A3A2A" stroke-width="0.8" opacity="0.5"/>
+    <line x1="15" y1="-94" x2="54" y2="-92" stroke="#4A3A2A" stroke-width="0.8" opacity="0.5"/>
+    <line x1="15" y1="-90" x2="50" y2="-82" stroke="#4A3A2A" stroke-width="0.8" opacity="0.5"/>
+
+    <!-- ==== 虎斑纹（额头 M 纹） ==== -->
+    <!-- 额头M字虎斑纹 — 典型虎斑猫特征 -->
+    <path d="M-15,-125 L-8,-118 L0,-126 L8,-118 L15,-125" 
+          fill="none" stroke="#4A3A2A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- 额头纹路加深 -->
+    <path d="M-12,-122 L-6,-116" fill="none" stroke="#4A3A2A" stroke-width="0.8" opacity="0.4"/>
+    <path d="M12,-122 L6,-116" fill="none" stroke="#4A3A2A" stroke-width="0.8" opacity="0.4"/>
+
+    <!-- ==== 面部虎斑纹 ==== -->
+    <!-- 左脸颊虎斑 -->
+    <path d="M-35,-100 Q-30,-95 -28,-88" fill="none" stroke="#4A3A2A" stroke-width="1.2" opacity="0.5" stroke-linecap="round"/>
+    <path d="M-38,-108 Q-32,-103 -30,-96" fill="none" stroke="#4A3A2A" stroke-width="1" opacity="0.4" stroke-linecap="round"/>
+    <path d="M-32,-115 Q-28,-110 -26,-105" fill="none" stroke="#4A3A2A" stroke-width="0.8" opacity="0.3" stroke-linecap="round"/>
+    <!-- 右脸颊虎斑 -->
+    <path d="M35,-100 Q30,-95 28,-88" fill="none" stroke="#4A3A2A" stroke-width="1.2" opacity="0.5" stroke-linecap="round"/>
+    <path d="M38,-108 Q32,-103 30,-96" fill="none" stroke="#4A3A2A" stroke-width="1" opacity="0.4" stroke-linecap="round"/>
+    <path d="M32,-115 Q28,-110 26,-105" fill="none" stroke="#4A3A2A" stroke-width="0.8" opacity="0.3" stroke-linecap="round"/>
+
+    <!-- ==== 身体虎斑纹 ==== -->
+    <path d="M-50,10 Q-42,15 -35,12" fill="none" stroke="#4A3A2A" stroke-width="1" opacity="0.35" stroke-linecap="round"/>
+    <path d="M-48,25 Q-40,30 -32,27" fill="none" stroke="#4A3A2A" stroke-width="1" opacity="0.35" stroke-linecap="round"/>
+    <path d="M-45,40 Q-38,45 -30,42" fill="none" stroke="#4A3A2A" stroke-width="1" opacity="0.35" stroke-linecap="round"/>
+    <path d="M50,10 Q42,15 35,12" fill="none" stroke="#4A3A2A" stroke-width="1" opacity="0.35" stroke-linecap="round"/>
+    <path d="M48,25 Q40,30 32,27" fill="none" stroke="#4A3A2A" stroke-width="1" opacity="0.35" stroke-linecap="round"/>
+    <path d="M45,40 Q38,45 30,42" fill="none" stroke="#4A3A2A" stroke-width="1" opacity="0.35" stroke-linecap="round"/>
+
+    <!-- ==== 前腿虎斑纹 ==== -->
+    <path d="M-42,-5 Q-36,0 -30,-3" fill="none" stroke="#4A3A2A" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+    <path d="M42,-5 Q36,0 30,-3" fill="none" stroke="#4A3A2A" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+
+    <!-- ==== 粉色玩具（照片中的粉色物体） ==== -->
+    <!-- 玩具主体 — 在爪子之间、嘴巴前方 -->
+    <ellipse cx="0" cy="-82" rx="16" ry="12" fill="none" stroke="#C06070" stroke-width="1.8" transform="rotate(-10,0,-82)"/>
+    <!-- 玩具纹理 -->
+    <path d="M-8,-85 Q0,-88 8,-85" fill="none" stroke="#C06070" stroke-width="0.8" opacity="0.5" transform="rotate(-10,0,-82)"/>
+    <path d="M-6,-80 Q0,-78 6,-80" fill="none" stroke="#C06070" stroke-width="0.8" opacity="0.5" transform="rotate(-10,0,-82)"/>
+    <!-- 玩具标签/绳子 -->
+    <path d="M12,-78 Q16,-72 14,-66" fill="none" stroke="#C06070" stroke-width="1.2" stroke-linecap="round"/>
+    <rect x="10" y="-64" width="8" height="6" rx="1.5" fill="none" stroke="#C06070" stroke-width="0.8"/>
+
+    <!-- ==== 毛发质感线条（增加素描感） ==== -->
+    <!-- 头顶毛 -->
+    <path d="M-8,-134 Q-4,-138 0,-137" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.3"/>
+    <path d="M0,-137 Q4,-138 8,-134" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.3"/>
+    <!-- 脸颊毛 -->
+    <path d="M-50,-75 Q-53,-70 -50,-65" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.25"/>
+    <path d="M50,-75 Q53,-70 50,-65" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.25"/>
+    <!-- 身体毛 -->
+    <path d="M-60,55 Q-62,60 -58,65" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.25"/>
+    <path d="M60,55 Q62,60 58,65" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.25"/>
+    <path d="M-55,75 Q-58,80 -54,85" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.25"/>
+    <path d="M55,75 Q58,80 54,85" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.25"/>
+
+  </g>
+
+  <!-- ==== 文字 ==== -->
+  <!-- "菠萝" 楷体 -->
+  <text x="250" y="555" text-anchor="middle" font-size="32" font-weight="bold"
+    font-family="'KaiTi','STKaiti','SimSun','serif'" fill="#5A4A3A" 
+    letter-spacing="5">🐱 菠萝</text>
+  
+  <!-- 装饰线 -->
+  <path d="M170,538 Q210,535 220,538" fill="none" stroke="#8B7A6A" stroke-width="0.8" opacity="0.3"/>
+  <path d="M280,538 Q290,535 330,538" fill="none" stroke="#8B7A6A" stroke-width="0.8" opacity="0.3"/>
+
+  <!-- 角落小菠萝装饰 -->
+  <g transform="translate(55, 55)" opacity="0.06">
+    <text font-size="24">🍍</text>
+  </g>
+  <g transform="translate(425, 510)" opacity="0.05">
+    <text font-size="20">🍍</text>
+  </g>
+</svg>

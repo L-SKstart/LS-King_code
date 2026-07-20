@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <linearGradient id="cat" x1="0.3" y1="0" x2="0.6" y2="1">
+      <stop offset="0%" stop-color="#F4D8A8"/>
+      <stop offset="55%" stop-color="#D8AC58"/>
+      <stop offset="100%" stop-color="#B07828"/>
+    </linearGradient>
+    <radialGradient id="bg" cx="0.5" cy="0.45" r="0.55">
+      <stop offset="0%" stop-color="#FFFEFA"/>
+      <stop offset="100%" stop-color="#F2E4CC"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="250" cy="250" r="240" fill="url(#bg)"/>
+  <circle cx="250" cy="250" r="236" fill="none" stroke="#D0B888" stroke-width="2.5" opacity="0.5"/>
+  <circle cx="250" cy="250" r="228" fill="none" stroke="#C8B078" stroke-width="1" opacity="0.3"/>
+
+  <g transform="translate(250, 252)">
+
+    <!-- 尾巴 -->
+    <path d="M52,65 Q108,82 120,30 Q128,-25 95,-58 Q78,-72 55,-52"
+          fill="none" stroke="url(#cat)" stroke-width="14" stroke-linecap="round"/>
+
+    <!-- ====== 从头到脚一条路径 ====== -->
+    <path d="
+      M 0,-158
+      C 52,-152 68,-122 72,-88
+      C 74,-68 70,-50 64,-34
+      C 68,-6 76,28 76,58
+      C 76,88 62,115 42,132
+      C 20,144 0,146 0,146
+      C 0,146 -20,144 -42,132
+      C -62,115 -76,88 -76,58
+      C -76,28 -68,-6 -64,-34
+      C -70,-50 -74,-68 -72,-88
+      C -68,-122 -52,-152 0,-158
+      Z"
+      fill="url(#cat)"/>
+
+    <!-- 肚皮 -->
+    <ellipse cx="0" cy="85" rx="36" ry="44" fill="#F8ECD8" opacity="0.55"/>
+
+    <!-- 胸 -->
+    <ellipse cx="0" cy="30" rx="30" ry="24" fill="#FAF2E4" opacity="0.5"/>
+
+    <!-- 下巴 -->
+    <ellipse cx="0" cy="-44" rx="32" ry="24" fill="#FDF6EA" opacity="0.5"/>
+
+    <!-- 腮 -->
+    <ellipse cx="-24" cy="-58" rx="20" ry="17" fill="#F0DCB8" opacity="0.32"/>
+    <ellipse cx="24" cy="-58" rx="20" ry="17" fill="#F0DCB8" opacity="0.32"/>
+
+    <!-- 后腿 -->
+    <ellipse cx="-36" cy="132" rx="22" ry="20" fill="url(#cat)"/>
+    <ellipse cx="-36" cy="150" rx="18" ry="10" fill="#E0C898"/>
+    <ellipse cx="36" cy="132" rx="22" ry="20" fill="url(#cat)"/>
+    <ellipse cx="36" cy="150" rx="18" ry="10" fill="#E0C898"/>
+
+    <!-- 前爪 -->
+    <path d="M-44,-22 Q-60,-48 -54,-78 Q-50,-92 -38,-92 Q-28,-92 -24,-76"
+          fill="none" stroke="url(#cat)" stroke-width="17" stroke-linecap="round"/>
+    <ellipse cx="-38" cy="-86" rx="7" ry="6.5" fill="#E8D0A8"/>
+    <circle cx="-35" cy="-89" r="2" fill="#E8A8A0"/>
+    <circle cx="-41" cy="-89" r="2" fill="#E8A8A0"/>
+    <ellipse cx="-38" cy="-83" rx="3.5" ry="2.5" fill="#E8A8A0"/>
+
+    <path d="M44,-22 Q60,-48 54,-78 Q50,-92 38,-92 Q28,-92 24,-76"
+          fill="none" stroke="url(#cat)" stroke-width="17" stroke-linecap="round"/>
+    <ellipse cx="38" cy="-86" rx="7" ry="6.5" fill="#E8D0A8"/>
+    <circle cx="35" cy="-89" r="2" fill="#E8A8A0"/>
+    <circle cx="41" cy="-89" r="2" fill="#E8A8A0"/>
+    <ellipse cx="38" cy="-83" rx="3.5" ry="2.5" fill="#E8A8A0"/>
+
+    <!-- 玩具 -->
+    <ellipse cx="0" cy="-62" rx="14" ry="10" fill="#F8C0C8" transform="rotate(-5,0,-62)"/>
+    <ellipse cx="0" cy="-62" rx="14" ry="10" fill="none" stroke="#D898A0" stroke-width="0.8" transform="rotate(-5,0,-62)" opacity="0.4"/>
+    <path d="M13,-58 Q17,-52 14,-46" fill="none" stroke="#D898A0" stroke-width="1" stroke-linecap="round"/>
+    <rect x="10" y="-44" width="6" height="5" rx="1.2" fill="#E8A0A8" opacity="0.65" transform="rotate(6,13,-41)"/>
+
+    <!-- 耳朵 -->
+    <path d="M-48,-130 L-68,-195 L-20,-148 Z" fill="url(#cat)"/>
+    <path d="M-44,-134 L-54,-182 L-26,-148 Z" fill="#F0B8A8" opacity="0.48"/>
+    <path d="M48,-130 L68,-195 L20,-148 Z" fill="url(#cat)"/>
+    <path d="M44,-134 L54,-182 L26,-148 Z" fill="#F0B8A8" opacity="0.48"/>
+
+    <!-- M纹 -->
+    <path d="M-14,-120 L-6,-112 L0,-120 L6,-112 L14,-120"
+          fill="none" stroke="#C89848" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+
+    <!-- 眼睛 -->
+    <ellipse cx="-26" cy="-90" rx="15" ry="16" fill="#FDF8F0" transform="rotate(-7,-26,-90)"/>
+    <ellipse cx="-26" cy="-90" rx="15" ry="16" fill="none" stroke="#8A6A48" stroke-width="1.3" transform="rotate(-7,-26,-90)"/>
+    <ellipse cx="-26" cy="-89" rx="10.5" ry="11.5" fill="#5A4030"/>
+    <ellipse cx="-26" cy="-89" rx="5.5" ry="7.5" fill="#1A1008"/>
+    <ellipse cx="-22" cy="-94" rx="5" ry="3" fill="#90C850" opacity="0.7" transform="rotate(-10,-22,-94)"/>
+    <circle cx="-22" cy="-96" r="4" fill="white" opacity="0.95"/>
+    <circle cx="-30" cy="-87" r="2" fill="white" opacity="0.45"/>
+
+    <ellipse cx="26" cy="-90" rx="15" ry="16" fill="#FDF8F0" transform="rotate(7,26,-90)"/>
+    <ellipse cx="26" cy="-90" rx="15" ry="16" fill="none" stroke="#8A6A48" stroke-width="1.3" transform="rotate(7,26,-90)"/>
+    <ellipse cx="26" cy="-89" rx="10.5" ry="11.5" fill="#5A4030"/>
+    <ellipse cx="26" cy="-89" rx="5.5" ry="7.5" fill="#1A1008"/>
+    <ellipse cx="30" cy="-94" rx="5" ry="3" fill="#90C850" opacity="0.7" transform="rotate(10,30,-94)"/>
+    <circle cx="30" cy="-96" r="4" fill="white" opacity="0.95"/>
+    <circle cx="22" cy="-87" r="2" fill="white" opacity="0.45"/>
+
+    <!-- 鼻子 -->
+    <path d="M-4.5,-72 L4.5,-72 L0,-68 Z" fill="#E89890" stroke="#C07870" stroke-width="0.5" stroke-linejoin="round"/>
+
+    <!-- 嘴 -->
+    <path d="M0,-68 L0,-62" stroke="#A08060" stroke-width="0.8" fill="none" opacity="0.5"/>
+    <path d="M-8,-66 Q0,-60 0,-62" stroke="#A08060" stroke-width="0.8" fill="none" stroke-linecap="round" opacity="0.5"/>
+    <path d="M8,-66 Q0,-60 0,-62" stroke="#A08060" stroke-width="0.8" fill="none" stroke-linecap="round" opacity="0.5"/>
+
+    <!-- 胡须 -->
+    <g opacity="0.3" fill="none" stroke="#C0A080" stroke-width="0.6">
+      <line x1="-15" y1="-76" x2="-55" y2="-84"/>
+      <line x1="-15" y1="-71" x2="-56" y2="-68"/>
+      <line x1="15" y1="-76" x2="55" y2="-84"/>
+      <line x1="15" y1="-71" x2="56" y2="-68"/>
+    </g>
+
+  </g>
+</svg>

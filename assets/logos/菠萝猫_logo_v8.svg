@@ -1,0 +1,255 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700" width="600" height="700">
+  <defs>
+    <filter id="paper">
+      <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="3" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="gray"/>
+      <feBlend in="SourceGraphic" in2="gray" mode="multiply"/>
+    </filter>
+    <filter id="soft">
+      <feGaussianBlur stdDeviation="1.5"/>
+    </filter>
+    <filter id="pencil">
+      <feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="2" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <!-- 金渐层暖金色渐变 — 更暖更金 -->
+    <radialGradient id="goldFur" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#F5DCA8"/>
+      <stop offset="30%" stop-color="#E8C880"/>
+      <stop offset="65%" stop-color="#D0A860"/>
+      <stop offset="100%" stop-color="#B08840"/>
+    </radialGradient>
+    <radialGradient id="creamBelly" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F8ECD8"/>
+      <stop offset="100%" stop-color="#E8D0A8"/>
+    </radialGradient>
+    <radialGradient id="headGold" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#F5E0B0"/>
+      <stop offset="45%" stop-color="#E0C078"/>
+      <stop offset="100%" stop-color="#C09850"/>
+    </radialGradient>
+    <radialGradient id="eyeColor" cx="40%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#A0D878"/>
+      <stop offset="60%" stop-color="#68A848"/>
+      <stop offset="100%" stop-color="#408830"/>
+    </radialGradient>
+  </defs>
+
+  <!-- 暖白纸 -->
+  <rect width="600" height="700" fill="#F5F0E6"/>
+  <rect width="600" height="700" fill="#EBE5D9" opacity="0.25" filter="url(#paper)"/>
+
+  <!-- ============================================================ -->
+  <!-- 菠萝 — 矮脚金渐层 V8 超明显特征版 -->
+  <!-- ============================================================ -->
+  <g transform="translate(300, 310)">
+
+    <!-- ++++++ 彩色底层（更浓郁） ++++++ -->
+    <g filter="url(#soft)" opacity="0.6">
+      <!-- 尾巴 -->
+      <path d="M-72,60 Q-118,68 -132,35 Q-140,2 -122,-28 Q-110,-48 -95,-38" 
+            fill="none" stroke="url(#goldFur)" stroke-width="16" stroke-linecap="round" opacity="0.8"/>
+      <!-- 身体 — 更圆 -->
+      <circle cx="0" cy="50" r="82" fill="url(#goldFur)"/>
+      <ellipse cx="0" cy="75" rx="58" ry="55" fill="url(#creamBelly)" opacity="0.8"/>
+      <!-- 后腿 -->
+      <ellipse cx="-42" cy="142" rx="28" ry="24" fill="url(#goldFur)"/>
+      <ellipse cx="42" cy="142" rx="28" ry="24" fill="url(#goldFur)"/>
+      <!-- 前爪 -->
+      <path d="M-65,-15 Q-80,-42 -72,-72 Q-68,-90 -55,-92 Q-42,-92 -38,-78" 
+            fill="none" stroke="url(#goldFur)" stroke-width="22" stroke-linecap="round" opacity="0.7"/>
+      <path d="M65,-15 Q80,-42 72,-72 Q68,-90 55,-92 Q42,-92 38,-78" 
+            fill="none" stroke="url(#goldFur)" stroke-width="22" stroke-linecap="round" opacity="0.7"/>
+      <!-- 头部 — 超圆 -->
+      <circle cx="0" cy="-115" r="72" fill="url(#headGold)"/>
+      <ellipse cx="0" cy="-100" rx="55" ry="45" fill="#F8ECD8" opacity="0.5"/>
+      <!-- 耳朵 -->
+      <path d="M-50,-150 L-68,-198 L-28,-165" fill="url(#headGold)"/>
+      <path d="M50,-150 L68,-198 L28,-165" fill="url(#headGold)"/>
+      <path d="M-48,-154 L-58,-184 L-32,-165" fill="#E8A898" opacity="0.6"/>
+      <path d="M48,-154 L58,-184 L32,-165" fill="#E8A898" opacity="0.6"/>
+      <!-- 眼睛 -->
+      <ellipse cx="-32" cy="-108" rx="21" ry="22" fill="url(#eyeColor)" opacity="0.5"/>
+      <ellipse cx="32" cy="-108" rx="21" ry="22" fill="url(#eyeColor)" opacity="0.5"/>
+    </g>
+
+    <!-- ++++++ 铅笔线稿（更柔和） ++++++ -->
+    <g filter="url(#pencil)">
+
+      <!-- 地面 — 更淡 -->
+      <path d="M-280,180 Q-120,158 0,158 Q120,158 280,180" fill="none" stroke="#A0A890" stroke-width="0.8" opacity="0.12"/>
+      <path d="M-260,186 Q-100,164 0,164 Q100,164 260,186" fill="none" stroke="#A0A890" stroke-width="0.6" opacity="0.08"/>
+
+      <!-- 脚下阴影 -->
+      <ellipse cx="0" cy="178" rx="75" ry="14" fill="#8A7A6A" opacity="0.05"/>
+
+      <!-- ===== 尾巴 ===== -->
+      <g>
+        <path d="M-72,60 Q-118,68 -132,35 Q-140,2 -122,-28 Q-110,-48 -95,-38" 
+              fill="none" stroke="#5A4A3A" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M-125,48 Q-130,42 -127,35" fill="none" stroke="#5A4A3A" stroke-width="0.6" opacity="0.35"/>
+        <path d="M-128,30 Q-132,24 -130,16" fill="none" stroke="#5A4A3A" stroke-width="0.6" opacity="0.35"/>
+        <path d="M-125,5 Q-128,-2 -124,-10" fill="none" stroke="#5A4A3A" stroke-width="0.6" opacity="0.35"/>
+      </g>
+
+      <!-- ===== 身体 — 超圆===== -->
+      <g>
+        <!-- 超圆身体轮廓 -->
+        <path d="M-78,-15 
+                 C-98,12 -102,55 -92,85 
+                 C-82,115 -55,138 0,140 
+                 C55,138 82,115 92,85 
+                 C102,55 98,12 78,-15" 
+              fill="none" stroke="#4A3A2A" stroke-width="2.2" stroke-linecap="round"/>
+        
+        <!-- 左侧阴影（柔和） -->
+        <path d="M-76,-5 C-92,22 -94,55 -86,82" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.2"/>
+        <path d="M-70,5 C-86,30 -88,58 -80,82" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.15"/>
+        <path d="M-72,80 C-78,100 -68,120 -55,130" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.15"/>
+        
+        <!-- 腹部排线 -->
+        <path d="M-35,132 C0,146 35,132 35,132" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.12"/>
+        
+        <!-- 毛发排线 -->
+        <path d="M-60,25 C-62,30 -58,35 -56,30" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.15"/>
+        <path d="M-56,42 C-58,47 -54,52 -52,47" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.15"/>
+        <path d="M-52,58 C-54,63 -50,68 -48,63" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.15"/>
+        <path d="M60,25 C62,30 58,35 56,30" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.12"/>
+        <path d="M56,42 C58,47 54,52 52,47" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.12"/>
+      </g>
+
+      <!-- ===== 左后腿 — 超短圆 ===== -->
+      <g>
+        <path d="M-52,128 C-60,148 -56,168 -50,176 C-44,182 -30,182 -24,176 C-20,168 -18,150 -22,135" 
+              fill="none" stroke="#4A3A2A" stroke-width="2" stroke-linecap="round"/>
+        <path d="M-44,135 C-50,150 -48,165 -44,172" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.2"/>
+        <path d="M-44,174 C-42,178 -36,178 -34,174" fill="none" stroke="#4A3A2A" stroke-width="0.7"/>
+        <path d="M-28,174 C-26,178 -22,178 -22,174" fill="none" stroke="#4A3A2A" stroke-width="0.7"/>
+      </g>
+
+      <!-- ===== 右后腿 — 超短圆 ===== -->
+      <g>
+        <path d="M52,128 C60,148 56,168 50,176 C44,182 30,182 24,176 C20,168 18,150 22,135" 
+              fill="none" stroke="#4A3A2A" stroke-width="2" stroke-linecap="round"/>
+        <path d="M44,135 C50,150 48,165 44,172" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.2"/>
+        <path d="M44,174 C42,178 36,178 34,174" fill="none" stroke="#4A3A2A" stroke-width="0.7"/>
+        <path d="M28,174 C26,178 22,178 22,174" fill="none" stroke="#4A3A2A" stroke-width="0.7"/>
+      </g>
+
+      <!-- ===== 左前爪 — 举起内扣 ===== -->
+      <g>
+        <path d="M-65,-15 C-80,-42 -75,-72 -68,-88 C-64,-96 -48,-96 -42,-86 C-38,-78 -40,-65 -42,-55" 
+              fill="none" stroke="#4A3A2A" stroke-width="2" stroke-linecap="round"/>
+        <path d="M-60,-22 C-72,-45 -68,-65 -62,-82" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.18"/>
+        <circle cx="-52" cy="-92" r="2.5" fill="#4A3A2A"/>
+        <circle cx="-60" cy="-91" r="2.5" fill="#4A3A2A"/>
+        <ellipse cx="-56" cy="-85" rx="4.5" ry="3" fill="#4A3A2A"/>
+      </g>
+
+      <!-- ===== 右前爪 — 举起内扣 ===== -->
+      <g>
+        <path d="M65,-15 C80,-42 75,-72 68,-88 C64,-96 48,-96 42,-86 C38,-78 40,-65 42,-55" 
+              fill="none" stroke="#4A3A2A" stroke-width="2" stroke-linecap="round"/>
+        <path d="M60,-22 C72,-45 68,-65 62,-82" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.18"/>
+        <circle cx="52" cy="-92" r="2.5" fill="#4A3A2A"/>
+        <circle cx="60" cy="-91" r="2.5" fill="#4A3A2A"/>
+        <ellipse cx="56" cy="-85" rx="4.5" ry="3" fill="#4A3A2A"/>
+      </g>
+
+      <!-- ===== 头部 — 极限圆脸 ===== -->
+      <g>
+        <!-- 超圆头轮廓 -->
+        <path d="M-70,-68 
+                 C-85,-98 -78,-140 -55,-158 
+                 C-32,-176 32,-176 55,-158 
+                 C78,-140 85,-98 70,-68 
+                 C62,-50 -62,-50 -70,-68" 
+              fill="none" stroke="#4A3A2A" stroke-width="2.5" stroke-linecap="round"/>
+        
+        <!-- 脸颊肉感 -->
+        <path d="M-66,-72 C-76,-84 -74,-96 -68,-102" fill="none" stroke="#4A3A2A" stroke-width="0.7" opacity="0.2"/>
+        <path d="M66,-72 C76,-84 74,-96 68,-102" fill="none" stroke="#4A3A2A" stroke-width="0.7" opacity="0.2"/>
+        
+        <!-- 头部毛流 -->
+        <path d="M-35,-162 C-18,-172 18,-172 35,-162" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.18"/>
+        <path d="M-52,-148 C-35,-162 35,-162 52,-148" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.12"/>
+      </g>
+
+      <!-- ===== 小圆耳 ===== -->
+      <g>
+        <path d="M-50,-150 C-54,-172 -66,-202 -44,-196 C-32,-192 -26,-168 -26,-158" 
+              fill="none" stroke="#4A3A2A" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M-48,-154 C-52,-170 -58,-186 -46,-186" fill="none" stroke="#4A3A2A" stroke-width="0.7" opacity="0.3"/>
+        <path d="M-60,-194 C-56,-198 -50,-196 -48,-192" fill="none" stroke="#4A3A2A" stroke-width="0.7" opacity="0.3"/>
+
+        <path d="M50,-150 C54,-172 66,-202 44,-196 C32,-192 26,-168 26,-158" 
+              fill="none" stroke="#4A3A2A" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M48,-154 C52,-170 58,-186 46,-186" fill="none" stroke="#4A3A2A" stroke-width="0.7" opacity="0.3"/>
+        <path d="M60,-194 C56,-198 50,-196 48,-192" fill="none" stroke="#4A3A2A" stroke-width="0.7" opacity="0.3"/>
+      </g>
+
+      <!-- ===== 超大圆眼（金渐层标志性呆萌眼） ===== -->
+      <g>
+        <!-- 左眼 -->
+        <ellipse cx="-32" cy="-106" rx="22" ry="23" fill="#F0E8D8"/>
+        <ellipse cx="-32" cy="-106" rx="22" ry="23" fill="none" stroke="#4A3A2A" stroke-width="2"/>
+        <ellipse cx="-32" cy="-106" rx="15" ry="16" fill="#5A4A3A"/>
+        <ellipse cx="-32" cy="-106" rx="11" ry="12" fill="#3A3A2A"/>
+        <ellipse cx="-32" cy="-106" rx="6" ry="9" fill="#1A1A1A"/>
+        <!-- 绿色虹膜 — 更明显 -->
+        <ellipse cx="-28" cy="-111" rx="8" ry="4.5" fill="#80C058" opacity="0.75" transform="rotate(-12,-28,-111)"/>
+        <ellipse cx="-36" cy="-101" rx="4" ry="2.5" fill="#A0D878" opacity="0.4" transform="rotate(-8,-36,-101)"/>
+        <!-- 高光 — 更大更亮 -->
+        <circle cx="-25" cy="-115" r="6" fill="white" opacity="0.95"/>
+        <circle cx="-36" cy="-100" r="3" fill="white" opacity="0.5"/>
+        <circle cx="-30" cy="-118" r="2" fill="white" opacity="0.3"/>
+
+        <!-- 右眼 -->
+        <ellipse cx="32" cy="-106" rx="22" ry="23" fill="#F0E8D8"/>
+        <ellipse cx="32" cy="-106" rx="22" ry="23" fill="none" stroke="#4A3A2A" stroke-width="2"/>
+        <ellipse cx="32" cy="-106" rx="15" ry="16" fill="#5A4A3A"/>
+        <ellipse cx="32" cy="-106" rx="11" ry="12" fill="#3A3A2A"/>
+        <ellipse cx="32" cy="-106" rx="6" ry="9" fill="#1A1A1A"/>
+        <ellipse cx="36" cy="-111" rx="8" ry="4.5" fill="#80C058" opacity="0.75" transform="rotate(12,36,-111)"/>
+        <ellipse cx="28" cy="-101" rx="4" ry="2.5" fill="#A0D878" opacity="0.4" transform="rotate(8,28,-101)"/>
+        <circle cx="37" cy="-115" r="6" fill="white" opacity="0.95"/>
+        <circle cx="28" cy="-100" r="3" fill="white" opacity="0.5"/>
+        <circle cx="33" cy="-118" r="2" fill="white" opacity="0.3"/>
+
+        <!-- 眼周（柔和） -->
+        <path d="M-52,-106 C-42,-124 -22,-126 -14,-106" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.2"/>
+        <path d="M14,-106 C22,-126 42,-124 52,-106" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.2"/>
+      </g>
+
+      <!-- ===== 鼻子 ===== -->
+      <g>
+        <path d="M-8,-86 C-2,-84 2,-84 8,-86 L0,-80 Z" fill="#D88878" stroke="#8A5A4A" stroke-width="0.8" stroke-linejoin="round"/>
+        <path d="M0,-80 L0,-74" stroke="#4A3A2A" stroke-width="0.6" opacity="0.3" fill="none"/>
+      </g>
+
+      <!-- ===== 嘴巴（呆萌） ===== -->
+      <g>
+        <path d="M0,-74 L0,-68" stroke="#4A3A2A" stroke-width="0.8" fill="none"/>
+        <path d="M-12,-72 C-4,-64 0,-68 0,-68" stroke="#4A3A2A" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+        <path d="M12,-72 C4,-64 0,-68 0,-68" stroke="#4A3A2A" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+      </g>
+
+      <!-- ===== 胡须 ===== -->
+      <g opacity="0.4">
+        <line x1="-22" y1="-88" x2="-76" y2="-98" stroke="#8A7A6A" stroke-width="0.7"/>
+        <line x1="-22" y1="-82" x2="-78" y2="-80" stroke="#8A7A6A" stroke-width="0.7"/>
+        <line x1="-22" y1="-76" x2="-74" y2="-64" stroke="#8A7A6A" stroke-width="0.7"/>
+        <line x1="22" y1="-88" x2="76" y2="-98" stroke="#8A7A6A" stroke-width="0.7"/>
+        <line x1="22" y1="-82" x2="78" y2="-80" stroke="#8A7A6A" stroke-width="0.7"/>
+        <line x1="22" y1="-76" x2="74" y2="-64" stroke="#8A7A6A" stroke-width="0.7"/>
+      </g>
+
+      <!-- ===== 毛尖色 ===== -->
+      <g opacity="0.45">
+        <path d="M-62,-80 C-58,-76 -54,-80 -52,-78" fill="none" stroke="#7A6A4A" stroke-width="0.7" opacity="0.3"/>
+        <path d="M62,-80 C58,-76 54,-80 52,-78" fill="none" stroke="#7A6A4A" stroke-width="0.7" opacity="0.3"/>
+        <path d="M-30,-150 C-15,-162 15,-162 30,-150" fill="none" stroke="#7A6A4A" stroke-width="0.7" opacity="0.2"/>
+      </g>
+    </g>
+  </g>
+</svg>

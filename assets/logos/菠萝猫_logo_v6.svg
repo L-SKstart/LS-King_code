@@ -1,0 +1,345 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700" width="600" height="700">
+  <defs>
+    <!-- 素描纸纹理 -->
+    <filter id="paper">
+      <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="4" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="gray"/>
+      <feBlend in="SourceGraphic" in2="gray" mode="multiply"/>
+    </filter>
+    <!-- 铅笔纹理 -->
+    <filter id="pencil">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="0.3"/>
+    </filter>
+    <!-- 石墨粉阴影 -->
+    <filter id="graphite">
+      <feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="4" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="0.6"/>
+    </filter>
+    <!-- 彩色铅笔晕染 -->
+    <filter id="colorSoft">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
+    <!-- 金渐层毛色渐变 -->
+    <radialGradient id="furBody" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#E8C88A"/>
+      <stop offset="40%" stop-color="#D4A860"/>
+      <stop offset="80%" stop-color="#B88940"/>
+      <stop offset="100%" stop-color="#A07838"/>
+    </radialGradient>
+    <radialGradient id="furBelly" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F0DCC0"/>
+      <stop offset="100%" stop-color="#E0C8A0"/>
+    </radialGradient>
+    <radialGradient id="furHead" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#E8C88A"/>
+      <stop offset="50%" stop-color="#D0A860"/>
+      <stop offset="100%" stop-color="#B08040"/>
+    </radialGradient>
+    <radialGradient id="eyeGreen" cx="40%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#90C068"/>
+      <stop offset="60%" stop-color="#60A040"/>
+      <stop offset="100%" stop-color="#408030"/>
+    </radialGradient>
+  </defs>
+
+  <!-- 暖白素描纸 -->
+  <rect width="600" height="700" fill="#F5F0E6"/>
+  <rect width="600" height="700" fill="#EBE5D9" opacity="0.4" filter="url(#paper)"/>
+
+  <!-- 画面边界 -->
+  <rect x="30" y="30" width="540" height="640" rx="8" fill="none" stroke="#C8BEA8" stroke-width="0.8" opacity="0.25"/>
+
+  <!-- ============================================================ -->
+  <!-- 菠萝 — 矮脚金渐层 彩色素描 V6 -->
+  <!-- 特征：圆脸圆身、短腿、金棕色皮毛、大圆眼、站立举爪 -->
+  <!-- ============================================================ -->
+  
+  <!-- ========== 彩色底层（在铅笔线稿之前） ========== -->
+  <g transform="translate(300, 320)" filter="url(#colorSoft)" opacity="0.55">
+    
+    <!-- 尾巴底色 -->
+    <path d="M-75,58 Q-120,65 -135,32 Q-145,-2 -125,-32 Q-112,-52 -92,-40" 
+          fill="none" stroke="url(#furBody)" stroke-width="16" stroke-linecap="round" opacity="0.6"/>
+
+    <!-- 身体底色 -->
+    <ellipse cx="0" cy="58" rx="70" ry="75" fill="url(#furBody)"/>
+    <!-- 腹部浅色 -->
+    <ellipse cx="0" cy="80" rx="45" ry="45" fill="url(#furBelly)" opacity="0.8"/>
+    <!-- 身体高光 -->
+    <ellipse cx="-15" cy="35" rx="40" ry="45" fill="#E8C88A" opacity="0.3"/>
+
+    <!-- 后腿底色 -->
+    <ellipse cx="-38" cy="150" rx="20" ry="20" fill="url(#furBody)"/>
+    <ellipse cx="38" cy="150" rx="20" ry="20" fill="url(#furBody)"/>
+
+    <!-- 前爪底色 -->
+    <path d="M-58,-10 Q-72,-38 -68,-65 Q-65,-85 -55,-88 Q-45,-88 -42,-78" 
+          fill="none" stroke="url(#furBody)" stroke-width="18" stroke-linecap="round" opacity="0.6"/>
+    <path d="M58,-10 Q72,-38 68,-65 Q65,-85 55,-88 Q45,-88 42,-78" 
+          fill="none" stroke="url(#furBody)" stroke-width="18" stroke-linecap="round" opacity="0.6"/>
+
+    <!-- 头部底色 -->
+    <ellipse cx="0" cy="-115" rx="62" ry="55" fill="url(#furHead)"/>
+    <!-- 脸颊浅色 -->
+    <ellipse cx="0" cy="-100" rx="48" ry="38" fill="#E8D0A8" opacity="0.5"/>
+    <!-- 头部高光 -->
+    <ellipse cx="-12" cy="-130" rx="35" ry="30" fill="#E8C88A" opacity="0.25"/>
+
+    <!-- 耳朵底色 -->
+    <path d="M-45,-148 L-62,-195 L-25,-165" fill="url(#furHead)" stroke="none"/>
+    <path d="M45,-148 L62,-195 L25,-165" fill="url(#furHead)" stroke="none"/>
+    <!-- 耳内粉色 -->
+    <path d="M-43,-152 L-54,-182 L-30,-165" fill="#E0A090" opacity="0.5"/>
+    <path d="M43,-152 L54,-182 L30,-165" fill="#E0A090" opacity="0.5"/>
+
+    <!-- 眼睛底色 -->
+    <ellipse cx="-28" cy="-108" rx="16" ry="17" fill="url(#eyeGreen)" opacity="0.4"/>
+    <ellipse cx="28" cy="-108" rx="16" ry="17" fill="url(#eyeGreen)" opacity="0.4"/>
+
+    <!-- 鼻底色 -->
+    <path d="M-7,-90 L7,-90 L0,-85 Z" fill="#D08070" opacity="0.5"/>
+  </g>
+
+  <!-- ========== 铅笔线稿层 ========== -->
+  <g transform="translate(300, 320)" filter="url(#pencil)">
+
+    <!-- ========== 背景环境 — 绿色水磨石地面 ========== -->
+    <path d="M-260,185 Q-120,165 0,165 Q120,165 260,185" fill="none" stroke="#A0A890" stroke-width="0.8" opacity="0.2"/>
+    <path d="M-240,190 Q-100,172 0,172 Q100,172 240,190" fill="none" stroke="#A0A890" stroke-width="0.6" opacity="0.15"/>
+    <path d="M-220,195 Q-90,178 0,178 Q90,178 220,195" fill="none" stroke="#A0A890" stroke-width="0.5" opacity="0.1"/>
+    <!-- 水磨石纹理 -->
+    <ellipse cx="-160" cy="178" rx="4" ry="3" fill="#B0B8A0" opacity="0.12"/>
+    <ellipse cx="-80" cy="170" rx="3" ry="2" fill="#C0A880" opacity="0.1"/>
+    <ellipse cx="50" cy="168" rx="5" ry="3" fill="#B0B8A0" opacity="0.12"/>
+    <ellipse cx="140" cy="175" rx="3" ry="3" fill="#A09080" opacity="0.1"/>
+    <ellipse cx="190" cy="182" rx="4" ry="2" fill="#B0B8A0" opacity="0.1"/>
+    <ellipse cx="-40" cy="174" rx="2" ry="2" fill="#C0A880" opacity="0.08"/>
+
+    <!-- ========== 背景纸箱轮廓 ========== -->
+    <rect x="-215" y="-130" width="70" height="80" rx="2" fill="none" stroke="#C8BEA8" stroke-width="0.6" opacity="0.1"/>
+    <line x1="-215" y1="-110" x2="-145" y2="-110" stroke="#C8BEA8" stroke-width="0.5" opacity="0.08"/>
+    <line x1="-215" y1="-90" x2="-145" y2="-90" stroke="#C8BEA8" stroke-width="0.5" opacity="0.08"/>
+    <rect x="140" y="-140" width="60" height="70" rx="2" fill="none" stroke="#C8BEA8" stroke-width="0.6" opacity="0.08"/>
+    <line x1="140" y1="-122" x2="200" y2="-122" stroke="#C8BEA8" stroke-width="0.5" opacity="0.06"/>
+
+    <!-- ========== 圆形猫抓板 ========== -->
+    <ellipse cx="190" cy="160" rx="35" ry="10" fill="none" stroke="#C8BEA8" stroke-width="0.6" opacity="0.08"/>
+    <ellipse cx="190" cy="158" rx="30" ry="8" fill="none" stroke="#C8BEA8" stroke-width="0.5" opacity="0.06"/>
+
+    <!-- ========== 脚下阴影 ========== -->
+    <ellipse cx="0" cy="180" rx="65" ry="10" fill="#8A7A6A" opacity="0.06" filter="url(#graphite)"/>
+
+    <!-- ========== 尾巴 ========== -->
+    <g filter="url(#graphite)">
+      <path d="M-80,60 Q-125,70 -140,35 Q-150,0 -130,-35 Q-115,-60 -95,-45" 
+            fill="none" stroke="#8A7A6A" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
+      <path d="M-75,58 Q-120,65 -135,32 Q-145,-2 -125,-32 Q-112,-52 -92,-40" 
+            fill="none" stroke="#5A4A3A" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- 尾巴排线 -->
+      <path d="M-125,50 Q-130,45 -128,38" fill="none" stroke="#5A4A3A" stroke-width="0.6" opacity="0.4"/>
+      <path d="M-130,35 Q-135,28 -132,20" fill="none" stroke="#5A4A3A" stroke-width="0.6" opacity="0.4"/>
+      <path d="M-130,15 Q-135,8 -130,0" fill="none" stroke="#5A4A3A" stroke-width="0.6" opacity="0.4"/>
+      <path d="M-125,-15 Q-128,-22 -122,-28" fill="none" stroke="#5A4A3A" stroke-width="0.6" opacity="0.4"/>
+      <path d="M-120,58 Q-125,52 -122,45" fill="none" stroke="#5A4A3A" stroke-width="0.5" opacity="0.3"/>
+      <path d="M-70,62 Q-100,70 -120,50" fill="none" stroke="#8A7A6A" stroke-width="0.5" opacity="0.15"/>
+    </g>
+
+    <!-- ========== 身体 ========== -->
+    <g filter="url(#graphite)">
+      <!-- 身体底稿 -->
+      <path d="M-72,-25 Q-88,15 -88,55 Q-88,95 -68,120 Q-40,140 0,140 Q40,140 68,120 Q88,95 88,55 Q88,15 72,-25" 
+            fill="none" stroke="#8A7A6A" stroke-width="1" opacity="0.2" stroke-linecap="round"/>
+      <!-- 身体主轮廓 -->
+      <path d="M-70,-22 Q-85,18 -85,58 Q-85,95 -65,118 Q-38,138 0,138 Q38,138 65,118 Q85,95 85,58 Q85,18 70,-22" 
+            fill="none" stroke="#4A3A2A" stroke-width="2.2" stroke-linecap="round"/>
+      <!-- 左侧阴影排线 -->
+      <path d="M-70,-15 Q-82,20 -82,58" fill="none" stroke="#4A3A2A" stroke-width="0.7" opacity="0.3"/>
+      <path d="M-65,-5 Q-78,25 -78,60" fill="none" stroke="#4A3A2A" stroke-width="0.7" opacity="0.25"/>
+      <path d="M-60,5 Q-74,30 -74,62" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.2"/>
+      <path d="M-65,70 Q-75,80 -72,92" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.2"/>
+      <path d="M-58,80 Q-68,90 -65,100" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.15"/>
+      <!-- 右侧排线 -->
+      <path d="M70,-15 Q82,20 82,58" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.2"/>
+      <path d="M65,-5 Q78,25 78,60" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.15"/>
+      <!-- 腹部排线 -->
+      <path d="M-30,125 Q0,135 30,125" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.2"/>
+      <path d="M-20,130 Q0,138 20,130" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.15"/>
+      <path d="M-10,132 Q0,140 10,132" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.12"/>
+      <!-- 毛发排线 -->
+      <path d="M-55,20 Q-58,25 -55,30" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.2"/>
+      <path d="M-52,35 Q-55,40 -52,45" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.2"/>
+      <path d="M-48,50 Q-52,55 -48,60" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.2"/>
+      <path d="M55,20 Q58,25 55,30" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.15"/>
+      <path d="M52,35 Q55,40 52,45" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.15"/>
+      <path d="M48,50 Q52,55 48,60" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.15"/>
+    </g>
+
+    <!-- ========== 左后腿（矮脚） ========== -->
+    <g filter="url(#graphite)">
+      <path d="M-48,122 Q-55,148 -52,168 Q-48,178 -38,178 Q-28,178 -24,168 Q-20,155 -22,138" 
+            fill="none" stroke="#4A3A2A" stroke-width="2" stroke-linecap="round"/>
+      <path d="M-42,125 Q-48,145 -45,162" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.3"/>
+      <path d="M-38,128 Q-44,145 -42,160" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.2"/>
+      <path d="M-42,175 Q-40,178 -36,178" fill="none" stroke="#4A3A2A" stroke-width="0.8"/>
+      <path d="M-32,178 Q-28,178 -26,175" fill="none" stroke="#4A3A2A" stroke-width="0.8"/>
+      <ellipse cx="-38" cy="176" rx="12" ry="4" fill="#4A3A2A" opacity="0.08"/>
+    </g>
+
+    <!-- ========== 右后腿（矮脚） ========== -->
+    <g filter="url(#graphite)">
+      <path d="M48,122 Q55,148 52,168 Q48,178 38,178 Q28,178 24,168 Q20,155 22,138" 
+            fill="none" stroke="#4A3A2A" stroke-width="2" stroke-linecap="round"/>
+      <path d="M42,125 Q48,145 45,162" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.3"/>
+      <path d="M38,128 Q44,145 42,160" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.2"/>
+      <path d="M42,175 Q40,178 36,178" fill="none" stroke="#4A3A2A" stroke-width="0.8"/>
+      <path d="M32,178 Q28,178 26,175" fill="none" stroke="#4A3A2A" stroke-width="0.8"/>
+      <ellipse cx="38" cy="176" rx="12" ry="4" fill="#4A3A2A" opacity="0.08"/>
+    </g>
+
+    <!-- ========== 左前爪（举起） ========== -->
+    <g filter="url(#graphite)">
+      <path d="M-58,-10 Q-72,-38 -68,-65 Q-65,-85 -55,-88 Q-45,-88 -42,-78" 
+            fill="none" stroke="#4A3A2A" stroke-width="2" stroke-linecap="round"/>
+      <path d="M-55,-15 Q-66,-40 -62,-62" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.25"/>
+      <path d="M-50,-20 Q-60,-42 -56,-60" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.2"/>
+      <!-- 爪垫 -->
+      <circle cx="-50" cy="-85" r="2" fill="#4A3A2A"/>
+      <circle cx="-56" cy="-84" r="2" fill="#4A3A2A"/>
+      <ellipse cx="-53" cy="-79" rx="3.5" ry="2.5" fill="#4A3A2A"/>
+      <path d="M-48,-88 Q-46,-90 -47,-87" fill="none" stroke="#4A3A2A" stroke-width="0.6"/>
+      <path d="M-54,-87 Q-56,-89 -55,-86" fill="none" stroke="#4A3A2A" stroke-width="0.6"/>
+      <path d="M-45,-75 Q-42,-70 -44,-65" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.2"/>
+    </g>
+
+    <!-- ========== 右前爪（举起） ========== -->
+    <g filter="url(#graphite)">
+      <path d="M58,-10 Q72,-38 68,-65 Q65,-85 55,-88 Q45,-88 42,-78" 
+            fill="none" stroke="#4A3A2A" stroke-width="2" stroke-linecap="round"/>
+      <path d="M55,-15 Q66,-40 62,-62" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.25"/>
+      <path d="M50,-20 Q60,-42 56,-60" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.2"/>
+      <circle cx="50" cy="-85" r="2" fill="#4A3A2A"/>
+      <circle cx="56" cy="-84" r="2" fill="#4A3A2A"/>
+      <ellipse cx="53" cy="-79" rx="3.5" ry="2.5" fill="#4A3A2A"/>
+      <path d="M48,-88 Q46,-90 47,-87" fill="none" stroke="#4A3A2A" stroke-width="0.6"/>
+      <path d="M54,-87 Q56,-89 55,-86" fill="none" stroke="#4A3A2A" stroke-width="0.6"/>
+      <path d="M45,-75 Q42,-70 44,-65" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.2"/>
+    </g>
+
+    <!-- ========== 头部 — 金渐层圆脸 ========== -->
+    <g filter="url(#graphite)">
+      <path d="M-70,-70 Q-78,-105 -62,-135 Q-40,-162 0,-166 Q40,-162 62,-135 Q78,-105 70,-70" 
+            fill="none" stroke="#8A7A6A" stroke-width="1" opacity="0.2" stroke-linecap="round"/>
+      <path d="M-68,-68 Q-75,-102 -60,-132 Q-38,-158 0,-162 Q38,-158 60,-132 Q75,-102 68,-68" 
+            fill="none" stroke="#4A3A2A" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- 脸颊 -->
+      <path d="M-65,-72 Q-75,-80 -72,-92" fill="none" stroke="#4A3A2A" stroke-width="0.8" opacity="0.3"/>
+      <path d="M65,-72 Q75,-80 72,-92" fill="none" stroke="#4A3A2A" stroke-width="0.8" opacity="0.3"/>
+      <!-- 头部排线 -->
+      <path d="M-40,-150 Q-20,-160 0,-162" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.2"/>
+      <path d="M40,-150 Q20,-160 0,-162" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.2"/>
+      <path d="M-55,-140 Q-40,-155 -20,-158" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.15"/>
+      <path d="M55,-140 Q40,-155 20,-158" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.15"/>
+      <!-- 下巴 -->
+      <path d="M-15,-65 Q0,-60 15,-65" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.15"/>
+      <path d="M-10,-62 Q0,-58 10,-62" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.12"/>
+    </g>
+
+    <!-- ========== 小圆耳 ========== -->
+    <g filter="url(#graphite)">
+      <path d="M-45,-148 L-62,-195 L-25,-165" fill="none" stroke="#4A3A2A" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M-43,-152 L-54,-182 L-30,-165" fill="none" stroke="#4A3A2A" stroke-width="0.8" opacity="0.4"/>
+      <path d="M-48,-168 Q-45,-172 -42,-168" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.3"/>
+      <path d="M-52,-175 Q-48,-178 -45,-174" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.3"/>
+      <path d="M-50,-160 Q-47,-164 -44,-160" fill="none" stroke="#4A3A2A" stroke-width="0.4" opacity="0.2"/>
+      <path d="M-60,-192 Q-58,-195 -55,-192" fill="none" stroke="#4A3A2A" stroke-width="0.8" opacity="0.4"/>
+      <path d="M-40,-142 Q-48,-160 -50,-180" fill="none" stroke="#8A7A6A" stroke-width="0.5" opacity="0.15"/>
+
+      <path d="M45,-148 L62,-195 L25,-165" fill="none" stroke="#4A3A2A" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M43,-152 L54,-182 L30,-165" fill="none" stroke="#4A3A2A" stroke-width="0.8" opacity="0.4"/>
+      <path d="M48,-168 Q45,-172 42,-168" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.3"/>
+      <path d="M52,-175 Q48,-178 45,-174" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.3"/>
+      <path d="M50,-160 Q47,-164 44,-160" fill="none" stroke="#4A3A2A" stroke-width="0.4" opacity="0.2"/>
+      <path d="M60,-192 Q58,-195 55,-192" fill="none" stroke="#4A3A2A" stroke-width="0.8" opacity="0.4"/>
+      <path d="M40,-142 Q48,-160 50,-180" fill="none" stroke="#8A7A6A" stroke-width="0.5" opacity="0.15"/>
+    </g>
+
+    <!-- ========== 大圆眼 ========== -->
+    <g>
+      <!-- 左眼 -->
+      <ellipse cx="-28" cy="-108" rx="18" ry="19" fill="#F0E8D8"/>
+      <ellipse cx="-28" cy="-108" rx="18" ry="19" fill="none" stroke="#4A3A2A" stroke-width="2"/>
+      <ellipse cx="-28" cy="-108" rx="12" ry="13" fill="#5A4A3A"/>
+      <ellipse cx="-28" cy="-108" rx="9" ry="10" fill="#3A3A2A"/>
+      <ellipse cx="-28" cy="-108" rx="5" ry="7" fill="#1A1A1A"/>
+      <ellipse cx="-25" cy="-112" rx="6" ry="3.5" fill="#80A850" opacity="0.7" transform="rotate(-15,-25,-112)"/>
+      <ellipse cx="-31" cy="-104" rx="3" ry="2" fill="#90B860" opacity="0.4" transform="rotate(-10,-31,-104)"/>
+      <circle cx="-23" cy="-115" r="5" fill="white" opacity="0.95"/>
+      <circle cx="-33" cy="-103" r="2.5" fill="white" opacity="0.5"/>
+      <circle cx="-27" cy="-118" r="1.5" fill="white" opacity="0.3"/>
+
+      <!-- 右眼 -->
+      <ellipse cx="28" cy="-108" rx="18" ry="19" fill="#F0E8D8"/>
+      <ellipse cx="28" cy="-108" rx="18" ry="19" fill="none" stroke="#4A3A2A" stroke-width="2"/>
+      <ellipse cx="28" cy="-108" rx="12" ry="13" fill="#5A4A3A"/>
+      <ellipse cx="28" cy="-108" rx="9" ry="10" fill="#3A3A2A"/>
+      <ellipse cx="28" cy="-108" rx="5" ry="7" fill="#1A1A1A"/>
+      <ellipse cx="31" cy="-112" rx="6" ry="3.5" fill="#80A850" opacity="0.7" transform="rotate(15,31,-112)"/>
+      <ellipse cx="25" cy="-104" rx="3" ry="2" fill="#90B860" opacity="0.4" transform="rotate(10,25,-104)"/>
+      <circle cx="33" cy="-115" r="5" fill="white" opacity="0.95"/>
+      <circle cx="23" cy="-103" r="2.5" fill="white" opacity="0.5"/>
+      <circle cx="27" cy="-118" r="1.5" fill="white" opacity="0.3"/>
+
+      <path d="M-46,-108 Q-38,-122 -28,-124 Q-18,-122 -12,-108" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.3"/>
+      <path d="M12,-108 Q18,-122 28,-124 Q38,-122 46,-108" fill="none" stroke="#4A3A2A" stroke-width="0.5" opacity="0.3"/>
+      <!-- 眉毛 -->
+      <path d="M-40,-128 Q-30,-134 -18,-128" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.2"/>
+      <path d="M18,-128 Q30,-134 40,-128" fill="none" stroke="#4A3A2A" stroke-width="0.6" opacity="0.2"/>
+    </g>
+
+    <!-- ========== 鼻子 ========== -->
+    <g>
+      <path d="M-7,-90 L7,-90 L0,-85 Z" fill="#D09080" stroke="#8A5A4A" stroke-width="0.8" stroke-linejoin="round"/>
+      <path d="M0,-85 L0,-78" stroke="#4A3A2A" stroke-width="0.6" opacity="0.4" fill="none"/>
+      <path d="M-5,-88 Q0,-84 5,-88" fill="none" stroke="#B07060" stroke-width="0.5" opacity="0.3"/>
+    </g>
+
+    <!-- ========== 嘴巴 ========== -->
+    <g>
+      <path d="M0,-78 L0,-72" stroke="#4A3A2A" stroke-width="1" fill="none"/>
+      <path d="M-12,-76 Q0,-68 0,-72" stroke="#4A3A2A" stroke-width="1" fill="none" stroke-linecap="round"/>
+      <path d="M12,-76 Q0,-68 0,-72" stroke="#4A3A2A" stroke-width="1" fill="none" stroke-linecap="round"/>
+      <path d="M-12,-76 L-16,-78" stroke="#4A3A2A" stroke-width="0.5" opacity="0.3" fill="none"/>
+      <path d="M12,-76 L16,-78" stroke="#4A3A2A" stroke-width="0.5" opacity="0.3" fill="none"/>
+    </g>
+
+    <!-- ========== 胡须 ========== -->
+    <g opacity="0.5">
+      <line x1="-18" y1="-92" x2="-68" y2="-102" stroke="#8A7A6A" stroke-width="0.7"/>
+      <line x1="-18" y1="-86" x2="-70" y2="-84" stroke="#8A7A6A" stroke-width="0.7"/>
+      <line x1="-18" y1="-80" x2="-66" y2="-68" stroke="#8A7A6A" stroke-width="0.7"/>
+      <line x1="18" y1="-92" x2="68" y2="-102" stroke="#8A7A6A" stroke-width="0.7"/>
+      <line x1="18" y1="-86" x2="70" y2="-84" stroke="#8A7A6A" stroke-width="0.7"/>
+      <line x1="18" y1="-80" x2="66" y2="-68" stroke="#8A7A6A" stroke-width="0.7"/>
+    </g>
+
+    <!-- ========== 毛尖色排线 ========== -->
+    <g filter="url(#graphite)" opacity="0.6">
+      <path d="M-62,-82 Q-58,-78 -54,-82" fill="none" stroke="#7A6A4A" stroke-width="0.8" opacity="0.4"/>
+      <path d="M-58,-72 Q-54,-68 -50,-72" fill="none" stroke="#7A6A4A" stroke-width="0.8" opacity="0.4"/>
+      <path d="M62,-82 Q58,-78 54,-82" fill="none" stroke="#7A6A4A" stroke-width="0.8" opacity="0.4"/>
+      <path d="M58,-72 Q54,-68 50,-72" fill="none" stroke="#7A6A4A" stroke-width="0.8" opacity="0.4"/>
+      <path d="M-30,-145 Q-15,-155 0,-158" fill="none" stroke="#7A6A4A" stroke-width="0.8" opacity="0.3"/>
+      <path d="M30,-145 Q15,-155 0,-158" fill="none" stroke="#7A6A4A" stroke-width="0.8" opacity="0.3"/>
+      <path d="M-52,-50 Q-48,-46 -44,-50" fill="none" stroke="#7A6A4A" stroke-width="0.6" opacity="0.25"/>
+      <path d="M52,-50 Q48,-46 44,-50" fill="none" stroke="#7A6A4A" stroke-width="0.6" opacity="0.25"/>
+    </g>
+
+    <!-- 签名 -->
+    <g transform="translate(175, 185)" opacity="0.25">
+      <text font-family="'Bradley Hand','cursive'" font-size="10" fill="#5A4A3A">菠萝</text>
+    </g>
+  </g>
+</svg>

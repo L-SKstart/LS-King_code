@@ -1,0 +1,174 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 550" width="500" height="550">
+  <!-- 油画风格 - 厚重笔触 + 丰富色彩 -->
+  
+  <defs>
+    <!-- 油画布纹理 -->
+    <filter id="canvas">
+      <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="gray"/>
+      <feBlend in="SourceGraphic" in2="gray" mode="multiply"/>
+    </filter>
+    <!-- 笔触纹理 -->
+    <filter id="brushStroke">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04 0.1" numOctaves="3" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <!-- 厚涂效果 -->
+    <filter id="impasto">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="4" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="0.5"/>
+    </filter>
+    <filter id="darkGlow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- 油画布背景 -->
+  <rect width="500" height="550" fill="#E8DDD0"/>
+  <rect width="500" height="550" fill="#D4C8B8" opacity="0.3" filter="url(#brushStroke)"/>
+
+  <!-- 深色背景氛围 -->
+  <ellipse cx="250" cy="270" rx="240" ry="260" fill="#2A2218" opacity="0.85"/>
+  <ellipse cx="250" cy="270" rx="230" ry="250" fill="#3A3020" opacity="0.9" filter="url(#brushStroke)"/>
+
+  <!-- 圆形画框 -->
+  <circle cx="250" cy="270" r="225" fill="none" stroke="#C8A870" stroke-width="4" opacity="0.6"/>
+  <circle cx="250" cy="270" r="222" fill="none" stroke="#A08050" stroke-width="1.5" opacity="0.4"/>
+
+  <!-- ========== 油画色彩层 ========== -->
+  <g filter="url(#impasto)">
+    
+    <!-- 背景暖光 -->
+    <circle cx="250" cy="260" r="180" fill="#4A3A2A" opacity="0.5"/>
+
+    <!-- 猫身体 - 暖棕色块 -->
+    <ellipse cx="250" cy="285" rx="55" ry="70" fill="#A07850"/>
+    <ellipse cx="250" cy="280" rx="50" ry="65" fill="#B88960" opacity="0.8"/>
+    <ellipse cx="250" cy="275" rx="45" ry="60" fill="#C4956A" opacity="0.6"/>
+    
+    <!-- 身体阴影 -->
+    <ellipse cx="235" cy="280" rx="30" ry="55" fill="#8A6A45" opacity="0.5"/>
+    <ellipse cx="230" cy="290" rx="20" ry="45" fill="#7A5A35" opacity="0.3"/>
+
+    <!-- 腹部亮色 -->
+    <ellipse cx="250" cy="295" rx="30" ry="45" fill="#D4B890"/>
+    <ellipse cx="250" cy="290" rx="25" ry="40" fill="#E0C8A0" opacity="0.7"/>
+
+    <!-- 后腿 -->
+    <ellipse cx="218" cy="360" rx="22" ry="16" fill="#A07850"/>
+    <ellipse cx="218" cy="358" rx="18" ry="12" fill="#B88960"/>
+    <ellipse cx="282" cy="360" rx="22" ry="16" fill="#A07850"/>
+    <ellipse cx="282" cy="358" rx="18" ry="12" fill="#B88960"/>
+    <!-- 后腿阴影 -->
+    <ellipse cx="215" cy="365" rx="15" ry="10" fill="#7A5A35" opacity="0.4"/>
+    <ellipse cx="285" cy="365" rx="15" ry="10" fill="#7A5A35" opacity="0.4"/>
+
+    <!-- 尾巴 -->
+    <path d="M190,310 Q150,330 145,290 Q140,250 160,220 Q170,205 180,225"
+      fill="#A07850" stroke="#B88960" stroke-width="8" stroke-linecap="round"/>
+    <path d="M190,310 Q155,325 148,290 Q143,255 160,225"
+      fill="none" stroke="#8A6A45" stroke-width="3" stroke-linecap="round" opacity="0.4"/>
+
+    <!-- ===== 头部 ===== -->
+    <ellipse cx="250" cy="165" rx="48" ry="45" fill="#A07850"/>
+    <ellipse cx="250" cy="163" rx="43" ry="40" fill="#B88960"/>
+    <ellipse cx="250" cy="160" rx="38" ry="36" fill="#C4956A" opacity="0.7"/>
+
+    <!-- 头部阴影 -->
+    <ellipse cx="238" cy="168" rx="25" ry="30" fill="#8A6A45" opacity="0.4"/>
+
+    <!-- 耳朵 -->
+    <polygon points="210,130 198,85 235,120" fill="#A07850"/>
+    <polygon points="210,128 200,90 233,118" fill="#B88960"/>
+    <polygon points="290,130 302,85 265,120" fill="#A07850"/>
+    <polygon points="290,128 300,90 267,118" fill="#B88960"/>
+    <!-- 内耳粉色 -->
+    <polygon points="213,126 205,98 230,120" fill="#D49080"/>
+    <polygon points="287,126 295,98 270,120" fill="#D49080"/>
+
+    <!-- 脸部浅色 -->
+    <ellipse cx="250" cy="178" rx="32" ry="25" fill="#D4B890"/>
+    <ellipse cx="250" cy="176" rx="28" ry="22" fill="#E0C8A0" opacity="0.6"/>
+
+    <!-- 左前爪（举起） -->
+    <path d="M205,220 Q185,190 192,155 Q195,142 205,142 Q215,142 215,155"
+      fill="#B88960" stroke="#A07850" stroke-width="2"/>
+    <ellipse cx="205" cy="148" rx="12" ry="8" fill="#C4956A"/>
+    <!-- 爪垫粉色 -->
+    <ellipse cx="203" cy="144" rx="4" ry="3" fill="#E0A090"/>
+    <ellipse cx="208" cy="144" rx="4" ry="3" fill="#E0A090"/>
+
+    <!-- 右前爪（举起） -->
+    <path d="M295,220 Q315,190 308,155 Q305,142 295,142 Q285,142 285,155"
+      fill="#B88960" stroke="#A07850" stroke-width="2"/>
+    <ellipse cx="295" cy="148" rx="12" ry="8" fill="#C4956A"/>
+    <ellipse cx="293" cy="144" rx="4" ry="3" fill="#E0A090"/>
+    <ellipse cx="298" cy="144" rx="4" ry="3" fill="#E0A090"/>
+
+    <!-- 眼睛 -->
+    <ellipse cx="232" cy="165" rx="10" ry="11" fill="#F0E8D8"/>
+    <ellipse cx="268" cy="165" rx="10" ry="11" fill="#F0E8D8"/>
+    <ellipse cx="233" cy="165" rx="6" ry="8" fill="#6A8A3A"/>
+    <ellipse cx="269" cy="165" rx="6" ry="8" fill="#6A8A3A"/>
+    <ellipse cx="233" cy="165" rx="3" ry="5" fill="#1A1A1A"/>
+    <ellipse cx="269" cy="165" rx="3" ry="5" fill="#1A1A1A"/>
+    <!-- 高光 -->
+    <circle cx="231" cy="162" r="2.5" fill="#FFF8F0"/>
+    <circle cx="267" cy="162" r="2.5" fill="#FFF8F0"/>
+
+    <!-- 鼻子 -->
+    <ellipse cx="250" cy="178" rx="4" ry="3" fill="#D08070"/>
+
+    <!-- 嘴巴 -->
+    <path d="M246,181 Q250,187 254,181" fill="none" stroke="#5A3A2A" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="250" y1="181" x2="250" y2="185" stroke="#5A3A2A" stroke-width="1.2"/>
+
+    <!-- 胡须 - 白色笔触 -->
+    <line x1="215" y1="175" x2="178" y2="168" stroke="#D4C8B8" stroke-width="1" opacity="0.6"/>
+    <line x1="215" y1="180" x2="176" y2="178" stroke="#D4C8B8" stroke-width="1" opacity="0.6"/>
+    <line x1="285" y1="175" x2="322" y2="168" stroke="#D4C8B8" stroke-width="1" opacity="0.6"/>
+    <line x1="285" y1="180" x2="324" y2="178" stroke="#D4C8B8" stroke-width="1" opacity="0.6"/>
+
+    <!-- ===== 粉色玩具 ===== -->
+    <ellipse cx="250" cy="158" rx="22" ry="14" fill="#E07080" transform="rotate(-12,250,158)"/>
+    <ellipse cx="250" cy="158" rx="16" ry="9" fill="#E88898" transform="rotate(-12,250,158)"/>
+    <ellipse cx="250" cy="158" rx="10" ry="5" fill="#F0A0B0" transform="rotate(-12,250,158)"/>
+    <!-- 玩具标签 -->
+    <rect x="268" y="146" width="10" height="14" rx="2" fill="#C05060" transform="rotate(8,273,153)"/>
+    <rect x="269" y="147" width="8" height="12" rx="1.5" fill="#D06070" transform="rotate(8,273,153)"/>
+
+    <!-- === 油画笔触纹理线 === -->
+    <g stroke="#C4956A" stroke-width="3" opacity="0.3" fill="none" stroke-linecap="round">
+      <path d="M210,250 Q220,248 230,252"/>
+      <path d="M270,248 Q280,245 290,250"/>
+      <path d="M220,270 Q235,268 250,272"/>
+      <path d="M250,268 Q265,265 280,270"/>
+      <path d="M215,210 Q225,208 235,212"/>
+      <path d="M265,210 Q275,207 285,212"/>
+    </g>
+
+    <!-- 背景氛围光晕 -->
+    <circle cx="250" cy="240" r="140" fill="#D4A060" opacity="0.08"/>
+    <circle cx="250" cy="260" r="100" fill="#E8B870" opacity="0.06"/>
+  </g>
+
+  <!-- ===== 文字 ===== -->
+  <!-- 菠萝 - 金色 -->
+  <text x="250" y="510" text-anchor="middle" font-size="34" font-weight="bold"
+    font-family="'KaiTi','STKaiti','SimSun','serif'" fill="#D4A870" 
+    letter-spacing="6" filter="url(#darkGlow)">菠萝</text>
+  
+  <text x="250" y="530" text-anchor="middle" font-size="10" 
+    font-family="'Bradley Hand','cursive'" fill="#A08860" 
+    letter-spacing="5">BOLUO</text>
+
+  <!-- 角落装饰 -->
+  <g transform="translate(60,60)" opacity="0.1">
+    <text font-size="24" fill="#D4A870">🍍</text>
+  </g>
+  <g transform="translate(420,460)" opacity="0.08">
+    <text font-size="20" fill="#D4A870">🍍</text>
+  </g>
+</svg>
