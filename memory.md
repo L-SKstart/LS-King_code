@@ -146,17 +146,20 @@
 
 ## 八、协作消息格式
 
+每条消息必须严格遵循以下结构：
+
 ```
-### 图标 名称：[MM-DD HH:MM] 主题摘要（简短中文）
+### 🧩 角色：[MM-DD HH:MM] 主题摘要（简短中文）
 
 @Copilot @Reasonix/@Claude 🚨 内容...
 
-⏱️⏱️ MM-DD HH:MM
+#### 子标题（消息内部小标题用 h4，不要用 h3）
 
----
+- 列表项
+
 ⏱️ MM-DD HH:MM
 
-------
+---
 ```
 
 - 图标：🧩=Reasonix  🤖=Copilot  🎯=Claude(Cowork)  🐋=Whale(Claude via Whale)
