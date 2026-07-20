@@ -46,6 +46,7 @@
 ⚠️ **chat.md 当前约 1100 行，急需归档！**
 
 ⏱️ 18:05
+
 ---
 
 ### 🧩 Reasonix：[06-22 18:40] 修改：oss_sync_process.sh 按用户5点要求重写
@@ -70,6 +71,7 @@
 ⚠️ **chat.md 当前 ~1120 行，超 1000 行红线，需归档。**
 
 ⏱️ 18:40
+
 ---
 
 ### 🧩 Reasonix：[06-22 18:45] 📦 chat.md 强制归档完成
@@ -89,6 +91,7 @@
 - 🧩 Reasonix [18:40] oss_sync_process.sh重写
 
 ⏱️ 18:45
+
 ---
 
 ### 🧩 Reasonix：[06-22 18:41] 文件位置告知 + memory.md更新
@@ -105,6 +108,7 @@
 **⬇️ 正在强制更新 memory.md ...**
 
 ⏱️ 18:41
+
 ---
 
 ### 🧩 Reasonix：[06-22 18:43] 规则更新：第零条改为只读chat.md
@@ -128,6 +132,7 @@
 **原因：** 完整读取全部核心文件过于消耗token，改为仅读 chat.md 了解上下文。
 
 ⏱️ 18:43
+
 ---
 
 ### 🧩 Reasonix：[06-22 18:15] 修正：第零条规则还原重要规范必读
@@ -151,6 +156,7 @@
 **已更新文件：** `需求要求记录.md` 第零条 + `memory.md` 速查+启动流程
 
 ⏱️ 18:15
+
 ---
 
 ### 🧩 Reasonix：[06-22 18:16] 修改：oss_sync_process.sh 简化——不解压，只放到固定目录
@@ -172,6 +178,7 @@
 **下一步：** 需用户配置 `OUTPUT_DIR` 目标路径。
 
 ⏱️ 18:16
+
 ---
 
 ### 🧩 Reasonix：[06-22 18:16] 修正：oss_sync_process.sh — output解压改_out
@@ -195,6 +202,7 @@ $OUTPUT_DIR/
 ```
 
 ⏱️ 18:16
+
 ---
 
 ### 🧩 Reasonix：[06-22 18:16] 新增解压脚本 + 整理命名规范
@@ -222,6 +230,7 @@ PREDICT/
 | 解压脚本 | `scripts/shell/oss_extract_process.sh` |
 
 ⏱️ 18:16
+
 ---
 
 ### 🧩 Reasonix：[06-22 18:17] 两个脚本同步整改——参照a.sh的OSS同步模式
@@ -245,6 +254,7 @@ PREDICT/
 ⚠️ **注意：** `Cloud_Tool`、`Endpoint`、`accessKeyID`、`accessKeySecret` 写死了 a.sh 的值，`OSS_ARCHIVE_DIR` 留空需用户自行填写。
 
 ⏱️ 18:17
+
 ---
 
 ### 🧩 Reasonix：[06-22 18:17] 两个脚本新增日期范围支持
@@ -271,6 +281,7 @@ bash oss_sync_process.sh 20260601,20260604  # 范围
 ```
 
 ⏱️ 18:17
+
 ---
 
 ### 🧩 Reasonix：[06-22 19:22] 清理系统Python——仅保留D盘一个
@@ -286,6 +297,7 @@ bash oss_sync_process.sh 20260601,20260604  # 范围
 **后续需要您手动处理：** `C:\Python314\` 需管理员权限才能删除，您右键文件夹 → 管理员取得所有权后即可删除。
 
 ⏱️ 19:22
+
 ---
 
 ### 🧩 Reasonix：[06-22 19:23] 维护：memory.md补录路径+时间戳
@@ -298,6 +310,7 @@ bash oss_sync_process.sh 20260601,20260604  # 范围
 | 📍 路径表新增 | `oss_sync_process.sh` + `oss_extract_process.sh` 已注册 |
 
 ⏱️ 19:23
+
 ---
 
 ### 🧩 Reasonix：[06-22 19:37] 修复：extract脚本CRLF+Unicode问题
@@ -317,6 +330,7 @@ bash oss_sync_process.sh 20260601,20260604  # 范围
 - 均通过 `bash -n` 语法检查 ✅
 
 ⏱️ 19:37
+
 ---
 
 ### 🤖 Copilot：[06-23 11:47] 图片中转：Java应用MySQL连接超时报错分析
@@ -385,6 +399,7 @@ mysql -u root -p123456 -e "SHOW VARIABLES LIKE '%timeout%';"
 **场景：** Java 应用启动时 JDBC 连接 MySQL 超时
 
 ⏱️ 11:48
+
 ---
 
 ### 🤖 Copilot：[06-23 16:37] 图片中转：OSS 脚本执行截图（2026-06-23 无 input + dat 拼写错误）
@@ -785,6 +800,7 @@ oss://ydxt-2/extdata/DDXT/clearing/IIS/20260601000000_DHM_20260531133922_output.
 ⚠️ **服务器同步最新版本。**
 
 ⏱️ 09:49
+
 ---
 
 ### 🤖 Copilot：[06-24 10:00] 图片中转：考核服务器执行 oss_extract_process.sh 20260602 截图
@@ -891,4 +907,5 @@ chmod +x ./*.sh                     # 赋予脚本执行权限
 **涉及文件：** `oss_extract_process.sh`、`oss_sync_process.sh`
 
 ⏱️ 10:13
+
 ---
