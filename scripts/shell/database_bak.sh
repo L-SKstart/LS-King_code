@@ -35,7 +35,7 @@ mkdir -p "$BACKUP_DIR" 2>/dev/null
 
 log() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*" >> "$LOG_FILE"
-    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"
+    [ -t 1 ] && echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"
 }
 
 # 构建 --ignore-table 参数
