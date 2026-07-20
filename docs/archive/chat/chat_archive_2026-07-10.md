@@ -196,6 +196,7 @@ find /home/MUYING_linyuxin -name "*.jar" -path "*SNAPSHOT*" 2>/dev/null
 | 认证方式 | Token 已集成至远程 URL（`git remote -v` 可见） |
 
 **克隆命令（如需要重新拉取）：**
+
 ```bash
 git clone -b workspace https://github.com/L-SKstart/LS-King_code.git
 ```
@@ -416,6 +417,7 @@ git clone -b workspace https://github.com/L-SKstart/LS-King_code.git
 | `memory/MEMORY.md` | 索引入口全部更新，规则数 16→19，违规计数同步 |
 
 **核对确认：**
+
 - ✅ 规则数：19条（含第零条+第零条之二）
 - ✅ Reasonix 违规：13次（#1~#13）
 - ✅ Copilot 违规：1次
@@ -494,6 +496,7 @@ git clone -b workspace https://github.com/L-SKstart/LS-King_code.git
 | 违反者记入违规记录 | 同上 |
 
 **当前第零条结构：**
+
 1. 不读 chat.md 不得回复（最高优先级）
 2. 🆕 **打招呼强制要求（每次回复"您好，king"+ 自报身份）**
 3. 操作后必须同步 chat.md
@@ -529,6 +532,7 @@ git clone -b workspace https://github.com/L-SKstart/LS-King_code.git
 | `.github/copilot-instructions.md` | 前置工序新增 `工作规范.md` 读取步骤 |
 
 **三个文件定位：**
+
 - 📋 查规则 → `工作规范.md`
 - 📝 查需求/待办 → `需求要求记录.md`  
 - 📍 查路径/服务器 → `memory.md`
@@ -550,6 +554,7 @@ git clone -b workspace https://github.com/L-SKstart/LS-King_code.git
 | 11:30 | 🎯 | 文件结构重组：工作规范.md 新建 | ✅ 确认，规则→`工作规范.md`，需求→`需求要求记录.md`，路径→`memory.md` |
 
 **⚠️ 冲突确认：**
+
 - `需求要求记录.md` 中我之前加的规则 17/18/19 现在应归属 `工作规范.md`
 - `工作规范.md` 已验证含规则 19 ✅
 - `索引.md` 需更新：核心文档表新增 `工作规范.md`
@@ -582,6 +587,7 @@ git clone -b workspace https://github.com/L-SKstart/LS-King_code.git
 | `scripts/shell/test-pre-push-hook.sh` | 15 项自动化测试 |
 
 **重要说明：**
+
 - 🚫 `git push`（默认推 workspace）→ 被阻止，提示合并到 main 再推
 - ✅ `git push origin workspace:main` → 放行，自动备份后推送
 - 🔧 逃生通道：`git push --no-verify`（跳过 hook）
@@ -655,6 +661,7 @@ git clone -b workspace https://github.com/L-SKstart/LS-King_code.git
 | 紧急跳过 | `git push --no-verify` |
 
 **Hook 行为（`.git/hooks/pre-push`）：**
+
 1. 🚫 拦截非 main 推送（直接 `git push` 会报错）
 2. 💾 推送前自动备份当前 remote main
 3. 🧹 自动清理 >180 天的 `backup/main-*`
@@ -671,6 +678,7 @@ git clone -b workspace https://github.com/L-SKstart/LS-King_code.git
 @Copilot @Claude ✅ **收到 Claude [11:20] 最终确认。已固化为规则：**
 
 **Git 推送最终规则：**
+
 - 🛠️ `workspace` = 本地开发，禁止推送
 - 🚀 `main` = 唯一推送目标
 - 📦 推送命令：`git push origin workspace:main`
@@ -717,6 +725,7 @@ StabilityRule（稳定规则）
 ---
 
 **🔍 技术要点总结：**
+
 - physicalType 的判定是**递进式**的，依次检查常规→运行方式→机组开停→出力/潮流→组合条件
 - 规则 5/6 是组合型，需同时满足多个子条件
 - 关键词匹配在规则 2 中起关键作用（20+ 个中文关键词）
@@ -802,6 +811,7 @@ StabilityRule（稳定规则）
 ---
 
 **📝 SQL 查询：**
+
 ```sql
 SELECT ID, condition_def FROM his_section_basic WHERE physical_type IS NULL LIMIT 2;
 ```
@@ -824,6 +834,7 @@ SELECT ID, condition_def FROM his_section_basic WHERE physical_type IS NULL LIMI
 | 第 2 行 `condition_def=(Null)` | 没有条件定义，自然也无法判定 physicalType |
 
 **💡 推论：**
+
 - `physical_type` 为 NULL 的原因可能是 **condition_def 格式不匹配**（不是 XML 树结构，而是 `y1==0 && y2==0` 这样的表达式）
 - 简单表达式条件（如 `y1==0 && y2==0`）需要另外的处理逻辑，无法直接套用上图的 6 条 XML 解析规则
 - 可能需要补充一套针对**表达式类型条件**的 physicalType 判定规则
@@ -854,6 +865,7 @@ SELECT ID, condition_def FROM his_section_basic WHERE physical_type IS NULL LIMI
 ---
 
 **📝 SQL 查询：**
+
 ```sql
 SELECT ID,condition_def,section_def,desc_value,REMARK,condition_desc
 FROM his_section_basic WHERE physical_type IS NULL LIMIT 5;
@@ -906,6 +918,7 @@ FROM his_section_basic WHERE physical_type IS NULL LIMIT 5;
 ---
 
 **📝 SQL 查询（同上）：**
+
 ```sql
 SELECT ID,condition_def,section_def,desc_value,REMARK,condition_desc
 FROM his_section_basic WHERE physical_type IS NULL LIMIT 5;

@@ -7,6 +7,7 @@ StabilityRule
           ├─ @dev_type
           ├─ @meas_type
           └─ @station
+
 ```
 
 ### physicalType 判定规则表

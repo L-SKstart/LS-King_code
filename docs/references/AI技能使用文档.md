@@ -192,10 +192,10 @@ cp -r skills/reasonix/* ~/.reasonix/skills/
 
 | 资源 | 地址 |
 |------|------|
-| awesome-reasonix 社区 Hub | https://github.com/hikari-2424/awesome-reasonix |
-| 浏览站点 | https://hikari-2424.github.io/awesome-reasonix-site/ |
-| caveman (Token 压缩之王 72k⭐) | https://github.com/JuliusBrussee/caveman |
-| collab-cli (多 Agent 协作) | https://github.com/yinsang0910-star/collab-cli |
+| awesome-reasonix 社区 Hub | <https://github.com/hikari-2424/awesome-reasonix> |
+| 浏览站点 | <https://hikari-2424.github.io/awesome-reasonix-site/> |
+| caveman (Token 压缩之王 72k⭐) | <https://github.com/JuliusBrussee/caveman> |
+| collab-cli (多 Agent 协作) | <https://github.com/yinsang0910-star/collab-cli> |
 
 ---
 

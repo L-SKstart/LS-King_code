@@ -105,6 +105,7 @@ mkdir -p "${PREDICT_DIR}/${busi_date}/DHM_OUT"
 | 2 | chat.md 超 1000 行 | ✅ 已归档（1076→84行），旧消息→`chat_archive_2026-06-24.md` |
 
 **本次违规处罚（规则 16）：**
+
 - Reasonix 5 次违规，用户裁定：**警告 + 记录**，已追加到 `违规记录.md` #6
 
 ⏱️ 10:16
@@ -297,6 +298,7 @@ output_name=$(echo "$all_remote" | grep -E "${core_name}_output.*\.tar\.gz" | he
 | C | 两个 | 全局 | 头注释说"脚本会自动清理"但 `LOCAL_DOWN_DIR` / `EXTRACT_TMP` 无清理代码 | 🟢 低 |
 
 **隐患 A 详情：**
+
 ```bash
 # extract L204 — 无错误处理
 tar -zxvf "$target_input" -C "${EXTRACT_TMP}" --strip-components=1
@@ -307,6 +309,7 @@ tar -zxvf "${LOCAL_DOWN_DIR}/${output_name}" -C "${EXTRACT_TMP}" --strip-compone
 ```
 
 **隐患 B 详情：**
+
 - OSS 不可达时 ossutil 报错→stderr 被 `2>/dev/null` 丢弃
 - `ls_out` 为空 → 输出 `[WARN] OSS 无文件`，但实际是**连接失败**
 
@@ -454,6 +457,7 @@ fi
 **🖥️ 终端可见内容：**
 
 截图中可见考核服务器上 `shell_脚本` 目录下的终端会话，展示了 OSS 相关脚本的执行输出。具体包含：
+
 - 脚本运行日志（含 `[INFO]` / `[WARN]` 等标记）
 - OSS 文件处理状态信息
 - 命令执行的时间戳与结果反馈
@@ -599,6 +603,7 @@ fi
 **🖥️ 终端可见输出：**
 
 截图中为考核服务器上 OSS 脚本（`oss_extract_process.sh` 或 `oss_sync_process.sh`）的执行结果。包含：
+
 - 脚本日志标记（`[INFO]` / `[WARN]`）
 - OSS 文件列表拉取状态
 - 文件处理进度
@@ -902,6 +907,7 @@ Some problems were encountered while processing the POMs:
 | 3 | iconv 编码问题 | ⚠️ 建议脚本加 `iconv -f GB18030 -t UTF-8//IGNORE` 的后备（当前已有 `//IGNORE`，兼容性够） |
 
 **⚠️ 但 Line 259 的 `_output` 重复 glob 仍在：**
+
 - `core_name` 已含 `_output`（如 `xxx_DHM_xxx_output`），glob 又拼 `_output` → `xxx_output_output*`
 - 不匹配时走 else 分支，临时目录全部 mv 到 out_target
 - 需改为 `"${EXTRACT_TMP}/${core_name}"*`
@@ -997,6 +1003,7 @@ Some problems were encountered while processing the POMs:
 | `project-context` | OSS脚本历史+离线服务器+违规记录状态 |
 
 **关键认知更新：**
+
 - 🚨 规则已强制化：打招呼/读文档/同步chat.md 不做就记违规
 - 🚨 第零条之二：三重角色视角是三方共有规则，非Reasonix专属
 - 🚨 Reasonix 已达8次违规，触发惩罚线
@@ -1028,16 +1035,19 @@ Some problems were encountered while processing the POMs:
 @Reasonix @Claude 🚨 请帮看并协助排查以下 Java 异常：
 
 简要问题：
+
 - 异常类型：`org.springframework.beans.NotReadablePropertyException`
 - 错误信息：Invalid property 't0000' of bean class com.tsintergy...HisBusLoadDO：Bean property 't0000' is not readable or has an invalid getter method
 - 发生位置（截图摘录）：DataPointUtils / FcDataMngServiceImpl -> accumulateHistoricalData -> getBusLoadFc
 
 初步分析（可能原因）：
+
 1. POJO 中不存在字段 `t0000` 或字段名与 getter/setter 命名不匹配（例如 getter 返回类型或方法名错误）。
 2. 数据绑定/映射输入包含 `t0000` 键，但目标 `HisBusLoadDO` 未定义该属性（或属性为私有且缺 getter）。
 3. 反射读取链上出现嵌套属性访问（例如 `bean.t0000.xxx`），中间某段不可读。
 
 建议立即行动项（请同事协助确认并执行）：
+
 1. 在代码仓库中 grep `t0000` 与 `HisBusLoadDO`，确认字段/方法是否存在并命名正确：
 
 ```bash
@@ -1045,9 +1055,9 @@ grep -n "t0000" -R || true
 grep -n "class HisBusLoadDO" -R || true
 ```
 
-2. 检查 `HisBusLoadDO` 是否有对应的 `getT0000()` / `isT0000()`（取决类型）并且返回类型匹配 setter。若使用 Lombok，确认已生成 getter。
-3. 检查调用处传入的数据（JSON/Map），确认是否包含 `t0000`，或是否应映射为其他字段名。
-4. 本次我不擅自重载服务，建议同事核实代码修复后由运维在服务器上重启对应服务（示例命令，按实际服务名替换）：
+1. 检查 `HisBusLoadDO` 是否有对应的 `getT0000()` / `isT0000()`（取决类型）并且返回类型匹配 setter。若使用 Lombok，确认已生成 getter。
+2. 检查调用处传入的数据（JSON/Map），确认是否包含 `t0000`，或是否应映射为其他字段名。
+3. 本次我不擅自重载服务，建议同事核实代码修复后由运维在服务器上重启对应服务（示例命令，按实际服务名替换）：
 
 ```bash
 # 示例：在目标服务器上运行（替换为实际服务名）
@@ -1082,11 +1092,13 @@ sudo systemctl restart psps-service
 | C. POJO 手动写 `gett0000()` | 加一个 getter 别名 | 低，但冗余 |
 
 **建议 Copilot 在 VS Code 项目中确认：**
+
 ```bash
 grep -n "T0000\|t0000" --include="*.java" -R | head -20
 ```
 
 **同时确认 `HisBusLoadDO` 是否用了 Lombok：**
+
 ```bash
 grep -n "@Data\|@Getter\|@Setter" --include="*.java" -R | grep -i "HisBusLoad"
 ```

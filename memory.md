@@ -79,6 +79,7 @@
 ## 六、项目技术上下文
 
 ### OSS 脚本已修复 bug（#1~#18 + #24~#25）
+
 关键修复：`--include` 不加引号导致 glob、grep `$` 在 CRLF 失效、`return 0` 误计成功、`${VAR:?}` 安全防护缺失、tar 错误处理、stderr 连接检测、output glob 重复、`rm -rf` 缺 `:?` 防护
 
 - 工作空间脚本为最新版，服务器（192.168.5.128）可能未同步
@@ -86,12 +87,14 @@
 - 编码：生产数据为 GB18030，脚本用 `iconv -f GB18030 -t UTF-8//IGNORE`
 
 ### 离线服务器 A（银河麒麟 V10 SP3 2403）
+
 - 已安装：Xvfb + 中文字体 + Java DISPLAY 配置
 - 管理脚本：`/opt/glzz/run.sh`（start/stop/restart）
 - 操作手册：`docs/manuals/A-离线服务器_Xvfb与Java程序启动手册.md`
 - libstdc++ 升级手册：`docs/manuals/Libstdc++升级_GLIBCXX_3.4.26修复_2026-07-16.md`（GLIBCXX_3.4.26 缺失修复，Rocky Linux 9 源下载 RPM + `--nodeps` 安装）
 
 ### 相关 SQL 脚本
+
 - `scripts/sql/physical_type_update.sql` — his_section_basic 物理类型判定（6 类规则，2026-07-16 完整重写）
 - `scripts/sql/tv_value_fill_mysql57.sql` — TV_VALUE JSON 补点存储过程（🎯 Claude 版）
 - `scripts/sql/tv_value_interpolate_mysql57.sql` — TV_VALUE 线性插值存储过程（🔷 DeepCode 版）
@@ -99,14 +102,17 @@
 - `scripts/sql/fix_actual_zero_fill.sql` — 🆕 实际值全零修复（匹配预测值替换，🧩 Reasonix 2026-07-17）
 
 ### 🔧 Shell 工具脚本（补充）
+
 - `scripts/shell/git-push-with-vpn.sh` — 🆕 Git 推送失败自动启动 VPN + 切换线路重试（🎯 Claude 2026-07-15）
 - `scripts/shell/vpn-auto-push.sh` — 🆕 VPN 自动推送辅助脚本
 
 ### 🎨 Logo 设计资产（菠萝猫，V1~V12）
+
 - 路径：`assets/logos/`（共 23 个 SVG 文件，V1~V12 + 风格变体）
 - 设计师：🤖 Copilot（2026-07-17）
 
 ### 📦 模板目录（AI 工作空间构建说明书）
+
 - 路径：`template/`
 - 核心文件：`AI协作工作空间构建说明书.md` — AI 可读的工作空间构建说明书（7大章节）
 - 创建者：🧩 Reasonix（2026-07-20）
@@ -114,6 +120,7 @@
 - 模板参考：`template/docs/templates/`（工作规范/memory/索引/违规记录模板）
 
 ### 错误分类总计
+
 - 截至 2026-06-25：总计 30 条（MySQL 4 + Docker 3 + Shell 18 + Java/X11 5）
 
 ---
@@ -147,12 +154,14 @@
 ⏱️ MM-DD HH:MM
 ---
 ```
+
 - 图标：🧩=Reasonix  🤖=Copilot  🎯=Claude(Cowork)  🐋=Whale(Claude via Whale)
 - 🐋 Whale 与 🎯 Claude 是同一模型不同客户端：🎯=Cowork桌面  🐋=Whale终端Agent
 - 标题必须含主题摘要，不可仅写时间
 - **只追加末尾，不插入中间**
 
 ### 已有归档
+
 - `chat_archive_2026-06-14_early.md`
 - `chat_archive_2026-06-22.md`
 - `chat_archive_2026-06-24.md`
@@ -165,6 +174,7 @@
 ## 九、Whale 启动协议（2026-07-10 约定）
 
 🐋 Whale 每次启动新会话时，第一条回复必须：
+
 1. 以"您好，king，Whale 就位"打招呼 + 对时
 2. 主动提示需要读取 D:\Reasonix_Workspace\ 下的上下文文件
 3. 请求您批准读取以下文件：

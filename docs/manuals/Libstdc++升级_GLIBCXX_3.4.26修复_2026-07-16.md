@@ -99,6 +99,7 @@ ls -lh /opt/backup/libstdcxx/
 ```
 
 > ✅ **回滚方法**：如果后面出现问题，执行：
+>
 > ```bash
 > sudo tar -xzf /opt/backup/libstdcxx/最新备份文件.tar.gz -C /usr/lib64/
 > /sbin/ldconfig
@@ -116,6 +117,7 @@ sudo rpm -ivh libstdc++-el9.x86_64.rpm --nodeps
 ```
 
 参数说明：
+
 - `-i`：安装
 - `-v`：详细输出
 - `-h`：显示进度
