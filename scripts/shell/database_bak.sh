@@ -5,6 +5,7 @@
 # 用法：
 #   bash database_bak.sh                  全量备份（慢，文件大）
 #   bash database_bak.sh --light          轻量备份（排除备份表副本，推荐）
+#   bash database_bak.sh --separate       分表备份（每表单独文件，推荐）
 #   bash database_bak.sh --structure-only 仅备份表结构（不含数据）
 #   bash database_bak.sh --check          诊断模式（仅测试连接，不备份）
 # ============================================================
@@ -79,6 +80,44 @@ if [ "$1" = "--check" ]; then
 
     echo ""
     echo "========== 诊断完成 =========="
+    exit 0
+fi
+
+# ===== 分表备份模式（每表单独文件） =====
+if [ "$1" = "--separate" ]; then
+    log "========== 开始分表备份 =========="
+
+    # 获取所有表名
+    TABLES=$(mysql -u"$DB_USER" -p"$DB_PASSWORD" -h"$DB_HOST" -P"$DB_PORT" "$DB_NAME" \
+        -N -e "SELECT table_name FROM information_schema.tables WHERE table_schema='${DB_NAME}' ORDER BY (data_length+index_length) DESC;" 2>>"$LOG_FILE")
+
+    TOTAL_SIZE=0
+    TABLE_COUNT=0
+    for TBL in $TABLES; do
+        # 检查是否在排除列表
+        SKIP=false
+        for IGN in "${IGNORE_TABLES[@]}"; do
+            [ "$TBL" = "$IGN" ] && SKIP=true && break
+        done
+        $SKIP && log "⏭️  跳过排除表：${TBL}" && continue
+
+        # 备份单表
+        TBL_FILE="${DB_NAME}_${TBL}_${DATE_STAMP}.sql.gz"
+        mysqldump -u"$DB_USER" -p"$DB_PASSWORD" -h"$DB_HOST" -P"$DB_PORT" \
+            --single-transaction --quick \
+            "$DB_NAME" "$TBL" 2>>"$LOG_FILE" | gzip -9 > "${BACKUP_DIR}/${TBL_FILE}"
+
+        if [ $? -eq 0 ]; then
+            SZ=$(ls -lh "${BACKUP_DIR}/${TBL_FILE}" | awk '{print $5}')
+            log "✅ ${TBL} → ${TBL_FILE}（${SZ}）"
+            TABLE_COUNT=$((TABLE_COUNT + 1))
+        else
+            log "❌ ${TBL} 备份失败"
+            rm -f "${BACKUP_DIR}/${TBL_FILE}"
+        fi
+    done
+
+    log "========== 分表备份完成（共 ${TABLE_COUNT} 个表）=========="
     exit 0
 fi
 
