@@ -106,6 +106,13 @@
 - 路径：`assets/logos/`（共 23 个 SVG 文件，V1~V12 + 风格变体）
 - 设计师：🤖 Copilot（2026-07-17）
 
+### 📦 模板目录（AI 工作空间构建说明书）
+- 路径：`template/`
+- 核心文件：`AI协作工作空间构建说明书.md` — AI 可读的工作空间构建说明书（7大章节）
+- 创建者：🧩 Reasonix（2026-07-20）
+- 说明文档：`template/docs/说明/快速上手指南.md`、`template/docs/说明/目录结构说明.md`
+- 模板参考：`template/docs/templates/`（工作规范/memory/索引/违规记录模板）
+
 ### 错误分类总计
 - 截至 2026-06-25：总计 30 条（MySQL 4 + Docker 3 + Shell 18 + Java/X11 5）
 
