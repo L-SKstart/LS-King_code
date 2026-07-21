@@ -1,53 +1,58 @@
 -- ============================================================
--- 更新 dm_non_market_unit_plan — 完整版（含索引加速）
+-- 更新 dm_non_market_unit_plan — 完整匹配逻辑 + 版本过滤
 -- 适用：MySQL 5.7+
 --
--- 匹配链路：
---   dm_non.DEVICE_ID（旧值）→ dt_unit.CODE
---   → dt_unit.CIM_ID → pmm_unit.CIM_ID
---   → 版本过滤 + 取最新 → 更新 dm_non
+-- 匹配逻辑：
+--   方式①：DEVICE_NAME → dt_unit.UNIT_NAME（仅用设备名）
+--   方式②：方式①不存在时 → PLANT_NAME+DEVICE_NAME → PLANT_NAME+UNIT_NAME
 --
+-- 链路：dm_non → dt_unit(CIM_ID) → pmm_unit(版本过滤) → 更新 dm_non
 -- 更新字段：DEVICE_ID、DEVICE_NAME、PLANT_ID、PLANT_NAME、UPDATE_TIME
--- 参数：${bizdate} → 查询版本的日期
+-- 参数：${bizdate}
 -- ============================================================
 
 -- ========================================
--- 第1步：创建索引（存在则跳过，不报错）
+-- 第1步：创建索引加速
 -- ========================================
 SET @db = DATABASE();
+SET @idx_sql = 'SELECT ''SKIP''';
 
--- dm_non：DEVICE_ID
-SET @exists = (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=@db AND table_name='dm_non_market_unit_plan' AND index_name='IDX_DEVICE_ID');
-SET @sql = IF(@exists = 0, 'ALTER TABLE dm_non_market_unit_plan ADD INDEX IDX_DEVICE_ID (`DEVICE_ID`) USING BTREE', 'SELECT ''已存在: IDX_DEVICE_ID''');
-PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+SET @exists = (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=@db AND table_name='dt_unit' AND index_name='IDX_UNIT_NAME');
+SET @idx_sql = IF(@exists = 0, 'ALTER TABLE dt_unit ADD INDEX IDX_UNIT_NAME (`UNIT_NAME`)', @idx_sql);
+PREPARE s1 FROM @idx_sql; EXECUTE s1; DEALLOCATE PREPARE s1;
 
--- dt_unit：CODE
-SET @exists = (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=@db AND table_name='dt_unit' AND index_name='IDX_CODE');
-SET @sql = IF(@exists = 0, 'ALTER TABLE dt_unit ADD INDEX IDX_CODE (`CODE`) USING BTREE', 'SELECT ''已存在: IDX_CODE''');
-PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
-
--- dt_unit：CIM_ID
 SET @exists = (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=@db AND table_name='dt_unit' AND index_name='IDX_CIM_ID');
-SET @sql = IF(@exists = 0, 'ALTER TABLE dt_unit ADD INDEX IDX_CIM_ID (`CIM_ID`) USING BTREE', 'SELECT ''已存在: IDX_CIM_ID''');
-PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+SET @idx_sql = IF(@exists = 0, 'ALTER TABLE dt_unit ADD INDEX IDX_CIM_ID (`CIM_ID`)', 'SELECT ''SKIP''');
+PREPARE s2 FROM @idx_sql; EXECUTE s2; DEALLOCATE PREPARE s2;
 
--- tsie_max_version_of_day：history_day
 SET @exists = (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=@db AND table_name='tsie_max_version_of_day' AND index_name='IDX_HISTORY_DAY');
-SET @sql = IF(@exists = 0, 'ALTER TABLE tsie_max_version_of_day ADD INDEX IDX_HISTORY_DAY (`history_day`) USING BTREE', 'SELECT ''已存在: IDX_HISTORY_DAY''');
-PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+SET @idx_sql = IF(@exists = 0, 'ALTER TABLE tsie_max_version_of_day ADD INDEX IDX_HISTORY_DAY (`history_day`)', 'SELECT ''SKIP''');
+PREPARE s3 FROM @idx_sql; EXECUTE s3; DEALLOCATE PREPARE s3;
 
 -- ========================================
 -- 第2步：执行更新
+--        子查询中先匹配 dt_unit（方式①/②），再关联 pmm_unit 版本过滤
 -- ========================================
 UPDATE dm_non_market_unit_plan t
 JOIN (
     SELECT
-        d.CODE  AS old_code,
-        u.DEVICE_ID,
-        u.DEVICE_NAME,
-        u.PLANT_ID,
-        u.PLANT_NAME
-    FROM dt_unit d
+        p.PLANT_NAME AS src_plant,
+        p.DEVICE_NAME AS src_device,
+        u.DEVICE_ID   AS new_device_id,
+        u.DEVICE_NAME AS new_device_name,
+        u.PLANT_ID    AS new_plant_id,
+        u.PLANT_NAME  AS new_plant_name
+    FROM dm_non_market_unit_plan p
+    -- 方式①/②：先尝试仅 UNIT_NAME 匹配；若该电厂下有精确匹配则用精确匹配
+    JOIN dt_unit d
+        ON (d.UNIT_NAME = p.DEVICE_NAME
+            AND NOT EXISTS (
+                SELECT 1 FROM dt_unit d2
+                WHERE d2.PLANT_NAME = p.PLANT_NAME
+                  AND d2.UNIT_NAME  = p.DEVICE_NAME
+            ))
+        OR (d.PLANT_NAME = p.PLANT_NAME
+            AND d.UNIT_NAME = p.DEVICE_NAME)
     JOIN pmm_unit u ON u.CIM_ID = d.CIM_ID
     CROSS JOIN (
         SELECT version FROM tsie_max_version_of_day
@@ -57,7 +62,6 @@ JOIN (
     ) ver
     WHERE u.START_VERSION <= ver.version
       AND u.END_VERSION >= ver.version
-      -- 同一 CIM_ID 可能有多条版本记录，取 START_VERSION 最大的
       AND u.START_VERSION = (
           SELECT MAX(u2.START_VERSION)
           FROM pmm_unit u2
@@ -65,10 +69,11 @@ JOIN (
             AND u2.START_VERSION <= ver.version
             AND u2.END_VERSION >= ver.version
       )
-) src ON t.DEVICE_ID = src.old_code
+    GROUP BY p.PLANT_NAME, p.DEVICE_NAME
+) src ON t.PLANT_NAME = src.src_plant AND t.DEVICE_NAME = src.src_device
 SET
-    t.DEVICE_ID   = src.DEVICE_ID,
-    t.DEVICE_NAME = src.DEVICE_NAME,
-    t.PLANT_ID    = src.PLANT_ID,
-    t.PLANT_NAME  = src.PLANT_NAME,
+    t.DEVICE_ID   = src.new_device_id,
+    t.DEVICE_NAME = src.new_device_name,
+    t.PLANT_ID    = src.new_plant_id,
+    t.PLANT_NAME  = src.new_plant_name,
     t.UPDATE_TIME = NOW();

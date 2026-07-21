@@ -19,15 +19,22 @@ SELECT
     d.PLANT_NAME,
     d.PLANT_ID,
     CASE
-        WHEN d.PLANT_NAME = '${plant_name}' AND d.UNIT_NAME = '${device_name}' THEN 1
+        WHEN d.UNIT_NAME = '${device_name}'
+             AND NOT EXISTS (
+                 SELECT 1 FROM dt_unit d2
+                 WHERE d2.PLANT_NAME = '${plant_name}'
+                   AND d2.UNIT_NAME  = '${device_name}'
+             )
+        THEN 1
         ELSE 2
     END AS match_way
 FROM dt_unit d
-WHERE (d.PLANT_NAME = '${plant_name}' AND d.UNIT_NAME = '${device_name}')  -- 方式②：精确匹配
-   OR (d.UNIT_NAME = '${device_name}'
-       AND NOT EXISTS (                        -- 方式①：仅配名称，且方式②没匹配到
-           SELECT 1 FROM dt_unit d2
-           WHERE d2.PLANT_NAME = '${plant_name}'
-             AND d2.UNIT_NAME  = '${device_name}'
+WHERE (d.UNIT_NAME = '${device_name}'                -- 方式①：仅用设备名
+       AND NOT EXISTS (
+           SELECT 1 FROM dt_unit
+           WHERE PLANT_NAME = '${plant_name}'
+             AND UNIT_NAME  = '${device_name}'
        ))
+   OR (d.PLANT_NAME = '${plant_name}'                 -- 方式②：精确匹配
+       AND d.UNIT_NAME = '${device_name}')
 GROUP BY d.CIM_ID, d.UNIT_NAME, d.PLANT_NAME, d.PLANT_ID;
