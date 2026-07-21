@@ -21,10 +21,6 @@ SELECT
     combined.match_way,
     combined.dt_unit_name,
     combined.dt_plant_name,
-    u.unit_code    AS pmm_unit_code,
-    u.unit_name    AS pmm_unit_name,
-    u.plant_code   AS pmm_plant_code,
-    u.plant_name   AS pmm_plant_name,
     u.start_version,
     u.end_version,
     t.target_version
