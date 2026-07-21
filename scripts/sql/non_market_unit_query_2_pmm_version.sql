@@ -8,25 +8,14 @@
 -- ============================================================
 
 SELECT
-    u.ID,
     u.DEVICE_ID,
     u.DEVICE_NAME,
     u.CIM_ID,
     u.CIM_NAME,
-    u.START_VERSION,
-    u.END_VERSION,
     u.PLANT_ID,
     u.PLANT_NAME,
-    u.UNIT_TYPE,
-    u.RATED_CAPACITY,
-    u.MAX_POWER,
-    u.MIN_POWER,
-    u.AUX_POWER_RATE,
-    u.IF_IN_MARKET,
-    u.AREA,
-    u.GRID_CONNECTION_POINT,
-    u.OPERATION_DATE,
-    u.RETIREMENT_DATE,
+    u.START_VERSION,
+    u.END_VERSION,
     t.version AS target_version
 FROM pmm_unit u
 CROSS JOIN (
