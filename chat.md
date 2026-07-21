@@ -698,3 +698,21 @@ bash database_bak.sh
 ⏱️ 07-20 17:59
 
 ---
+
+### 🧩 Reasonix：[07-21 10:49] 🔧 修复 VPN 推送脚本
+
+@Copilot @Claude @Whale @DeepCode ✅ **已修复 `scripts/shell/git-push-with-vpn.sh` 的 5 个问题：**
+
+| # | 原问题 | 修复 |
+|:-:|:-------|:----|
+| 1 | `set -e` 导致脚本一错就崩 | 去掉，容错执行 |
+| 2 | 自动 `git checkout workspace` 切换分支 | 改为检测当前分支，自动适配 |
+| 3 | 自动 `git add -A && git commit` 乱提交 | 仅提交时需手动传参，否则只警告 |
+| 4 | 线路切换依赖 `python3` | 改为 `grep`/`sed`，无外部依赖 |
+| 5 | 检测 v2rayN 用 Clash API（端口9090） | 改为检测 SOCKS5 端口10808，更稳定 |
+
+🧩 Reasonix 当前违规计数：**3 次**
+
+⏱️ 07-21 10:49
+
+---
