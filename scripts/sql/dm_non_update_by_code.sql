@@ -2,9 +2,10 @@
 -- 更新 dm_non_market_unit_plan — 完整匹配逻辑 + 版本过滤
 -- 适用：MySQL 5.7+
 --
--- 匹配逻辑：
---   方式①：DEVICE_NAME → dt_unit.UNIT_NAME（仅用设备名）
---   方式②：方式①不存在时 → PLANT_NAME+DEVICE_NAME → PLANT_NAME+UNIT_NAME
+-- 匹配优先级：
+--   第1级：CODE 匹配 — DEVICE_ID → dt_unit.CODE（DEVICE_ID初始即为CODE）
+--   第2级：方式① — DEVICE_NAME → dt_unit.UNIT_NAME（仅用设备名）
+--   第3级：方式② — PLANT_NAME+DEVICE_NAME → dt_unit.PLANT_NAME+UNIT_NAME
 --
 -- 链路：dm_non → dt_unit(CIM_ID) → pmm_unit(版本过滤) → 更新 dm_non
 -- 更新字段：DEVICE_ID、DEVICE_NAME、PLANT_ID、PLANT_NAME、UPDATE_TIME
@@ -16,6 +17,10 @@
 -- ========================================
 SET @db = DATABASE();
 SET @idx_sql = 'SELECT ''SKIP''';
+
+SET @exists = (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=@db AND table_name='dt_unit' AND index_name='IDX_CODE');
+SET @idx_sql = IF(@exists = 0, 'ALTER TABLE dt_unit ADD INDEX IDX_CODE (`CODE`)', 'SELECT ''SKIP''');
+PREPARE s0 FROM @idx_sql; EXECUTE s0; DEALLOCATE PREPARE s0;
 
 SET @exists = (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=@db AND table_name='dt_unit' AND index_name='IDX_UNIT_NAME');
 SET @idx_sql = IF(@exists = 0, 'ALTER TABLE dt_unit ADD INDEX IDX_UNIT_NAME (`UNIT_NAME`)', @idx_sql);
@@ -43,16 +48,19 @@ JOIN (
         u.PLANT_ID    AS new_plant_id,
         u.PLANT_NAME  AS new_plant_name
     FROM dm_non_market_unit_plan p
-    -- 方式①/②：先尝试仅 UNIT_NAME 匹配；若该电厂下有精确匹配则用精确匹配
+    -- 第1级：CODE 匹配（DEVICE_ID 初始即为 CODE）
     JOIN dt_unit d
-        ON (d.UNIT_NAME = p.DEVICE_NAME
-            AND NOT EXISTS (
-                SELECT 1 FROM dt_unit d2
-                WHERE d2.PLANT_NAME = p.PLANT_NAME
-                  AND d2.UNIT_NAME  = p.DEVICE_NAME
-            ))
+        ON d.CODE = p.DEVICE_ID
+        -- 第2级：方式① — CODE 没匹配到且精确配不存在时，仅用设备名
+        OR (d.UNIT_NAME = p.DEVICE_NAME
+            AND NOT EXISTS (SELECT 1 FROM dt_unit WHERE CODE = p.DEVICE_ID)
+            AND NOT EXISTS (SELECT 1 FROM dt_unit
+                            WHERE PLANT_NAME = p.PLANT_NAME
+                              AND UNIT_NAME  = p.DEVICE_NAME))
+        -- 第3级：方式② — CODE 没匹配到，用精确配（电厂+设备名）
         OR (d.PLANT_NAME = p.PLANT_NAME
-            AND d.UNIT_NAME = p.DEVICE_NAME)
+            AND d.UNIT_NAME = p.DEVICE_NAME
+            AND NOT EXISTS (SELECT 1 FROM dt_unit WHERE CODE = p.DEVICE_ID))
     JOIN pmm_unit u ON u.CIM_ID = d.CIM_ID
     CROSS JOIN (
         SELECT version FROM tsie_max_version_of_day
