@@ -1,16 +1,32 @@
 -- ============================================================
--- 更新 dm_non_market_unit_plan — 通过 CODE 匹配重新赋值
--- 适用：MySQL 5.7+（单条 UPDATE，兼容严格模式）
+-- 更新 dm_non_market_unit_plan — 完整版（含索引加速）
+-- 适用：MySQL 5.7+
 --
 -- 匹配链路：
 --   dm_non.DEVICE_ID（旧值）→ dt_unit.CODE
 --   → dt_unit.CIM_ID → pmm_unit.CIM_ID
---   → 取版本范围内最新一条 → 更新 dm_non
+--   → 版本过滤 + 取最新 → 更新 dm_non
 --
 -- 更新字段：DEVICE_ID、DEVICE_NAME、PLANT_ID、PLANT_NAME、UPDATE_TIME
 -- 参数：${bizdate} → 查询版本的日期
 -- ============================================================
 
+-- ========================================
+-- 第1步：创建索引加速（仅首次执行，已有则跳过）
+-- ========================================
+-- dm_non：DEVICE_ID 用于关联 dt_unit.CODE
+ALTER TABLE dm_non_market_unit_plan ADD INDEX IDX_DEVICE_ID (`DEVICE_ID`) USING BTREE;
+
+-- dt_unit：CODE 和 CIM_ID 是关键关联字段
+ALTER TABLE dt_unit ADD INDEX IDX_CODE (`CODE`) USING BTREE;
+ALTER TABLE dt_unit ADD INDEX IDX_CIM_ID (`CIM_ID`) USING BTREE;
+
+-- tsie_max_version_of_day：history_day 用于查版本
+ALTER TABLE tsie_max_version_of_day ADD INDEX IDX_HISTORY_DAY (`history_day`) USING BTREE;
+
+-- ========================================
+-- 第2步：执行更新
+-- ========================================
 UPDATE dm_non_market_unit_plan t
 JOIN (
     SELECT
@@ -29,7 +45,7 @@ JOIN (
     ) ver
     WHERE u.START_VERSION <= ver.version
       AND u.END_VERSION >= ver.version
-      -- 取同一 CIM_ID 下 START_VERSION 最大的那条（最新版本）
+      -- 同一 CIM_ID 可能有多条版本记录，取 START_VERSION 最大的
       AND u.START_VERSION = (
           SELECT MAX(u2.START_VERSION)
           FROM pmm_unit u2
