@@ -119,6 +119,16 @@
 - 说明文档：`template/docs/说明/快速上手指南.md`、`template/docs/说明/目录结构说明.md`
 - 模板参考：`template/docs/templates/`（工作规范/memory/索引/违规记录模板）
 
+### 低碳调度项目表结构
+- 数据库：`mtms_gd_pbew`（192.168.1.76:3306）
+- `pmm_unit` — 经济模型-发电机组（关联：DEVICE_ID ↔ dt_unit）
+- `dt_unit` — 机组DT文件映射表（匹配字段：PLANT_NAME + UNIT_NAME）
+- `dt_tieline` — 交流联络线DT文件映射表
+- `dt_tieline_group` — 联络线组DT文件映射表
+- `dm_non_market_unit_plan` — 非市场机组发电计划（匹配字段：PLANT_NAME + DEVICE_NAME）
+- `tsie_max_version_of_day` — 版本管理表
+- 关联SQL：`scripts/sql/non_market_unit_query.sql`
+
 ### 错误分类总计
 
 - 截至 2026-06-25：总计 30 条（MySQL 4 + Docker 3 + Shell 18 + Java/X11 5）
