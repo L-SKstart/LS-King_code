@@ -1,0 +1,98 @@
+-- Table structure for pmm_unit
+-- ----------------------------
+DROP TABLE IF EXISTS `pmm_unit`;
+CREATE TABLE `pmm_unit`  (
+  `ID` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '主键ID',
+  `DEVICE_ID` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '设备id',
+  `DEVICE_NAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '设备名称',
+  `CIM_ID` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '关联cim设备id',
+  `CIM_NAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '关联cime设备名称',
+  `START_VERSION` bigint(20) NULL DEFAULT NULL COMMENT '开始版本号',
+  `END_VERSION` bigint(20) NULL DEFAULT NULL COMMENT '结束版本号',
+  `PLANT_ID` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '所属电厂id',
+  `PLANT_NAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '所属电厂',
+  `UNIT_TYPE` int(11) NULL DEFAULT NULL COMMENT '机组类型',
+  `RATED_CAPACITY` decimal(18, 4) NULL DEFAULT NULL COMMENT '额定容量(MW)',
+  `MAX_POWER` decimal(18, 4) NULL DEFAULT NULL COMMENT '最高技术出力(MW)',
+  `MIN_POWER` decimal(18, 4) NULL DEFAULT NULL COMMENT '最低技术出力(MW)',
+  `AUX_POWER_RATE` decimal(18, 4) NULL DEFAULT NULL COMMENT '厂用电率(%)',
+  `MAX_START_STOP_PER_DAY` int(11) NULL DEFAULT NULL COMMENT '允许启停次数(次)',
+  `MIN_ON_TIME` decimal(18, 4) NULL DEFAULT NULL COMMENT '最小运行持续时间(min)',
+  `MIN_OFF_TIME` decimal(18, 4) NULL DEFAULT NULL COMMENT '最小停机持续时间(min)',
+  `HOT_START_COST` decimal(18, 4) NULL DEFAULT NULL COMMENT '热态启动费用(元)',
+  `WARM_START_COST` decimal(18, 4) NULL DEFAULT NULL COMMENT '温态启动费用(元)',
+  `COLD_START_COST` decimal(18, 4) NULL DEFAULT NULL COMMENT '冷态启动费用(元)',
+  `NO_LOAD_COST` decimal(18, 4) NULL DEFAULT NULL COMMENT '空载费用(元)',
+  `MIN_OUTPUT_COST` decimal(18, 4) NULL DEFAULT NULL COMMENT '最小发电成本(元)',
+  `INITIAL_STATUS` int(11) NULL DEFAULT NULL COMMENT '机组初始状态(运行、停机)',
+  `INITIAL_ACTIVE_POWER` decimal(18, 4) NULL DEFAULT NULL COMMENT '机组初始状态有功出力(MW)',
+  `RAMP_UP_RATE` decimal(18, 4) NULL DEFAULT NULL COMMENT '上升速率(MW/min)',
+  `RAMP_DOWN_RATE` decimal(18, 4) NULL DEFAULT NULL COMMENT '下降速率(MW/min)',
+  `MAX_ENERGY_STORAGE` decimal(18, 4) NULL DEFAULT NULL COMMENT '储能最大电量(MWh)',
+  `INIT_SOC` decimal(18, 4) NULL DEFAULT NULL COMMENT '初始SOC(%)',
+  `END_SOC` decimal(18, 4) NULL DEFAULT NULL COMMENT '周期末SOC(%)',
+  `MAX_SOC` decimal(18, 4) NULL DEFAULT NULL COMMENT '最大SOC(%)',
+  `MIN_SOC` decimal(18, 4) NULL DEFAULT NULL COMMENT '最小SOC(%)',
+  `MAX_CHARGING_POWER` decimal(18, 4) NULL DEFAULT NULL COMMENT '最大充电功率(MW)',
+  `MAX_DISCHARGING_POWER` decimal(18, 4) NULL DEFAULT NULL COMMENT '最大放电功率(MW)',
+  `CHARGING_EFFICIENCY` decimal(18, 4) NULL DEFAULT NULL COMMENT '充电效率(%)',
+  `DISCHARGING_EFFICIENCY` decimal(18, 4) NULL DEFAULT NULL COMMENT '放电效率(%)',
+  `IS_PUMP_POWER_ADJUSTABLE` int(11) NULL DEFAULT NULL COMMENT '抽水工况功率是否连续可调',
+  `PUMP_WATER_ENERGY_RATE` decimal(18, 4) NULL DEFAULT NULL COMMENT '抽水工况水能转换率(m3/MWh)',
+  `GEN_WATER_ENERGY_RATE` decimal(18, 4) NULL DEFAULT NULL COMMENT '发电工况水能转换率(m3/MWh)',
+  `MAX_PUMP_START_STOP` int(11) NULL DEFAULT NULL COMMENT '抽水工况允许启停次数(次)',
+  `MAX_GEN_START_STOP` int(11) NULL DEFAULT NULL COMMENT '发电工况允许启停次数(次)',
+  `NODE_TYPE` int(11) NULL DEFAULT NULL COMMENT '节点类型(机组、变压器绕组、线路端子、母线)',
+  `VOLTAGE` decimal(18, 4) NULL DEFAULT NULL COMMENT '接入电压等级(kV)',
+  `IF_IN_MARKET` int(11) NULL DEFAULT NULL COMMENT '是否参与电能量市场',
+  `AREA` int(11) NULL DEFAULT NULL COMMENT '所属区域',
+  `GRID_CONNECTION_POINT` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '指定上网点',
+  `UNIT_GRADE` int(11) NULL DEFAULT NULL COMMENT '机组等级',
+  `OPERATION_DATE` datetime(0) NULL DEFAULT NULL COMMENT '投运日期',
+  `RETIREMENT_DATE` datetime(0) NULL DEFAULT NULL COMMENT '退役日期',
+  `CREATE_TIME` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `UPDATE_TIME` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `CREATE_BY` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `UPDATE_BY` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '更新人',
+  `UP_DOWN_STATE_STATUS` int(11) NULL DEFAULT NULL COMMENT '机组启停过程状态（31-冷态开机过程/32-温态开机过程/33-热态开机过程）',
+  `INITIAL_KEEP_TIME` decimal(18, 4) NULL DEFAULT NULL COMMENT '机组初始状态保持时间',
+  `IF_CON_POWER_CHANGE_TIMES` int(11) NULL DEFAULT NULL COMMENT '是否考虑出力变化次数限制',
+  `MAX_POWER_INCREASE_TIMES` int(11) NULL DEFAULT NULL COMMENT '最大出力上升次数(次/天)',
+  `MAX_POWER_DECREASE_TIMES` int(11) NULL DEFAULT NULL COMMENT '最大出力下降次数(次/天)',
+  `IF_CON_POWER_SEGMENTATION` int(11) NULL DEFAULT NULL COMMENT '是否考虑出力分档位',
+  `POWER_SEGMENTATION` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '分档出力',
+  `AREA_ID` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '所属区域Id',
+  `IF_CHP` int(11) NULL DEFAULT NULL COMMENT '是否热电联产',
+  PRIMARY KEY (`ID`) USING BTREE,
+  UNIQUE INDEX `DEVICE_ID`(`DEVICE_ID`, `START_VERSION`, `END_VERSION`) USING BTREE,
+  INDEX `IDX_DEVICE_ID`(`DEVICE_ID`) USING BTREE,
+  INDEX `IDX_START_VERSION`(`START_VERSION`) USING BTREE,
+  INDEX `IDX_END_VERSION`(`END_VERSION`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '经济模型-发电机组' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for pmm_unit_group
+-- Table structure for pmm_unit_set
+-- ----------------------------
+DROP TABLE IF EXISTS `pmm_unit_set`;
+CREATE TABLE `pmm_unit_set`  (
+  `ID` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '主键ID',
+  `DEVICE_ID` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '设备id',
+  `DEVICE_NAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '设备名称',
+  `CIM_ID` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '关联cim设备id',
+  `CIM_NAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '关联cime设备名称',
+  `START_VERSION` bigint(20) NULL DEFAULT NULL COMMENT '开始版本号',
+  `END_VERSION` bigint(20) NULL DEFAULT NULL COMMENT '结束版本号',
+  `CREATE_TIME` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `UPDATE_TIME` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `CREATE_BY` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `UPDATE_BY` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '更新人',
+  `SET_DEVICE_ID_LIST` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '套机设备id集合',
+  PRIMARY KEY (`ID`) USING BTREE,
+  INDEX `IDX_DEVICE_ID`(`DEVICE_ID`) USING BTREE,
+  INDEX `IDX_END_VERSION`(`END_VERSION`) USING BTREE,
+  INDEX `IDX_START_VERSION`(`START_VERSION`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '经济模型-套机' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for pmm_winding
