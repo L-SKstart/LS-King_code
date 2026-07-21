@@ -12,17 +12,29 @@
 -- ============================================================
 
 -- ========================================
--- 第1步：创建索引加速（仅首次执行，已有则跳过）
+-- 第1步：创建索引（存在则跳过，不报错）
 -- ========================================
--- dm_non：DEVICE_ID 用于关联 dt_unit.CODE
-ALTER TABLE dm_non_market_unit_plan ADD INDEX IDX_DEVICE_ID (`DEVICE_ID`) USING BTREE;
+SET @db = DATABASE();
 
--- dt_unit：CODE 和 CIM_ID 是关键关联字段
-ALTER TABLE dt_unit ADD INDEX IDX_CODE (`CODE`) USING BTREE;
-ALTER TABLE dt_unit ADD INDEX IDX_CIM_ID (`CIM_ID`) USING BTREE;
+-- dm_non：DEVICE_ID
+SET @exists = (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=@db AND table_name='dm_non_market_unit_plan' AND index_name='IDX_DEVICE_ID');
+SET @sql = IF(@exists = 0, 'ALTER TABLE dm_non_market_unit_plan ADD INDEX IDX_DEVICE_ID (`DEVICE_ID`) USING BTREE', 'SELECT ''已存在: IDX_DEVICE_ID''');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
--- tsie_max_version_of_day：history_day 用于查版本
-ALTER TABLE tsie_max_version_of_day ADD INDEX IDX_HISTORY_DAY (`history_day`) USING BTREE;
+-- dt_unit：CODE
+SET @exists = (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=@db AND table_name='dt_unit' AND index_name='IDX_CODE');
+SET @sql = IF(@exists = 0, 'ALTER TABLE dt_unit ADD INDEX IDX_CODE (`CODE`) USING BTREE', 'SELECT ''已存在: IDX_CODE''');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- dt_unit：CIM_ID
+SET @exists = (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=@db AND table_name='dt_unit' AND index_name='IDX_CIM_ID');
+SET @sql = IF(@exists = 0, 'ALTER TABLE dt_unit ADD INDEX IDX_CIM_ID (`CIM_ID`) USING BTREE', 'SELECT ''已存在: IDX_CIM_ID''');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- tsie_max_version_of_day：history_day
+SET @exists = (SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=@db AND table_name='tsie_max_version_of_day' AND index_name='IDX_HISTORY_DAY');
+SET @sql = IF(@exists = 0, 'ALTER TABLE tsie_max_version_of_day ADD INDEX IDX_HISTORY_DAY (`history_day`) USING BTREE', 'SELECT ''已存在: IDX_HISTORY_DAY''');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 -- ========================================
 -- 第2步：执行更新
