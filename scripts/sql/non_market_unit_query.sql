@@ -3,9 +3,9 @@
 -- 用途：供 DataWorks 工作流调用，查询结果用于后续对比入库
 -- 逻辑：
 --   1. 从 tsie_max_version_of_day 取目标版本
---   2. 方式①：接入数据(站+机组) → dt_unit.unit_name
+--   2. 方式①：dm_non_market_unit_plan(站名+机组名) → dt_unit.unit_name
 --   3. 方式②：方式①未匹配的 → dt_unit.plant_name + unit_name
---   4. 关联 pmm_unit 限制版本
+--   4. 关联 pmm_unit 限制版本 (start_version ≤ ver ≤ end_version)
 -- ============================================================
 
 -- ===== 参数（在 DataWorks 中替换为调度参数） =====
@@ -23,51 +23,60 @@ WITH target_version AS (
 ),
 
 -- ========================================
--- 第2步：接入数据关联 dt_unit（方式①）
+-- 第2步：方式① — 站名+机组名 → dt_unit.unit_name
 -- ========================================
 match_way1 AS (
     SELECT
-        p.*,
+        p.station_code,
+        p.station_name,
+        p.unit_code,
+        p.unit_name,
         d.CIM_ID,
-        d.unit_name  AS dt_unit_name,
-        d.plant_name AS dt_plant_name,
+        d.UNIT_NAME AS dt_unit_name,
+        d.PLANT_NAME AS dt_plant_name,
+        d.PLANT_ID   AS dt_plant_id,
         1 AS match_way,
         ROW_NUMBER() OVER (
-            PARTITION BY p.场站字段, p.机组名字段
-            ORDER BY d.CIM_ID
+            PARTITION BY p.station_code, p.unit_code
+            ORDER BY d.ID
         ) AS rn
     FROM dm_non_market_unit_plan p
     JOIN dt_unit d
-        ON p.场站字段 = d.plant_name
-        AND p.机组名字段 = d.unit_name
+        ON d.UNIT_NAME = p.unit_name
+        AND d.PLANT_NAME = p.station_name
     CROSS JOIN target_version t
     WHERE t.version IS NOT NULL
 ),
 
 -- ========================================
--- 第3步：方式①未匹配的走方式②
+-- 第3步：方式② — 站名+机组名 → dt_unit.plant_name + unit_name
+--          （方式①没匹配到的走这个）
 -- ========================================
 match_way2 AS (
     SELECT
-        p.*,
+        p.station_code,
+        p.station_name,
+        p.unit_code,
+        p.unit_name,
         d.CIM_ID,
-        d.unit_name  AS dt_unit_name,
-        d.plant_name AS dt_plant_name,
+        d.UNIT_NAME AS dt_unit_name,
+        d.PLANT_NAME AS dt_plant_name,
+        d.PLANT_ID   AS dt_plant_id,
         2 AS match_way,
         ROW_NUMBER() OVER (
-            PARTITION BY p.场站字段, p.机组名字段
-            ORDER BY d.CIM_ID
+            PARTITION BY p.station_code, p.unit_code
+            ORDER BY d.ID
         ) AS rn
     FROM dm_non_market_unit_plan p
     JOIN dt_unit d
-        ON p.场站字段 = d.plant_name
-        AND p.机组名字段 = d.unit_name
+        ON d.PLANT_NAME = p.station_name
+        AND d.UNIT_NAME = p.unit_name
     CROSS JOIN target_version t
     WHERE t.version IS NOT NULL
       AND NOT EXISTS (
           SELECT 1 FROM dt_unit d2
-          WHERE d2.plant_name = p.场站字段
-            AND d2.unit_name = p.机组名字段
+          WHERE d2.UNIT_NAME = p.unit_name
+            AND d2.PLANT_NAME = p.station_name
       )
 )
 
@@ -75,29 +84,36 @@ match_way2 AS (
 -- 第4步：合并结果 + 关联台账限制版本
 -- ========================================
 SELECT
-    COALESCE(m1.场站字段, m2.场站字段) AS station,
-    COALESCE(m1.机组名字段, m2.机组名字段) AS unit_name,
-    COALESCE(m1.CIM_ID, m2.CIM_ID) AS CIM_ID,
-    COALESCE(m1.match_way, m2.match_way) AS match_way,
-    u.unit_code,
-    u.unit_name     AS pmm_unit_name,
-    u.plant_code,
-    u.plant_name    AS pmm_plant_name,
+    combined.station_code,
+    combined.station_name,
+    combined.unit_code,
+    combined.unit_name,
+    combined.CIM_ID,
+    combined.match_way,
+    combined.dt_unit_name,
+    combined.dt_plant_name,
+    u.unit_code    AS pmm_unit_code,
+    u.unit_name    AS pmm_unit_name,
+    u.plant_code   AS pmm_plant_code,
+    u.plant_name   AS pmm_plant_name,
     u.start_version,
     u.end_version,
-    t.version       AS target_version
+    t.version      AS target_version
 FROM (
+    -- 方式①匹配结果
     SELECT * FROM match_way1 WHERE rn = 1
+    -- 方式②匹配结果（排除已匹配方式①的）
     UNION ALL
     SELECT * FROM match_way2 WHERE rn = 1
       AND NOT EXISTS (
-          SELECT 1 FROM match_way1 m1_1
-          WHERE m1_1.场站字段 = match_way2.场站字段
-            AND m1_1.机组名字段 = match_way2.机组名字段
+          SELECT 1 FROM match_way1 m1
+          WHERE m1.station_code = match_way2.station_code
+            AND m1.unit_code = match_way2.unit_code
       )
 ) combined
 JOIN pmm_unit u
     ON u.CIM_ID = combined.CIM_ID
     AND u.start_version <= (SELECT version FROM target_version)
     AND u.end_version >= (SELECT version FROM target_version)
-CROSS JOIN target_version t;
+CROSS JOIN target_version t
+ORDER BY combined.station_code, combined.unit_code;
