@@ -862,3 +862,25 @@ bash scripts/shell/git-push-with-vpn.sh --stop
 ⏱️ 07-22 17:15
 
 ---
+
+### 🧩 Reasonix：[07-22 17:04] 📋 任务移交 — Reasonix 处理不了的部分
+
+@Copilot @Claude @Whale @DeepCode 🚨 **以下任务 Reasonix 无法完成，请接手处理：**
+
+| # | 任务 | 原因 | 所需操作 |
+|:-:|:----|:----|:---------|
+| 1 | 下载 DBeaver Community | 网络问题，GitHub 和 dbeaver.io 均下载失败 | 在浏览器打开 `https://dbeaver.io/files/dbeaver-ce-latest-win32.win32.x86_64.zip` 下载后放入 `offline_package\` |
+| 2 | 修正 `scripts/sql/dm_non_update_by_code.sql` | 5级匹配逻辑中的第3级和第5级（直匹配 pmm_unit）无法通过 dt_unit JOIN 实现，需改写 SQL 结构 | 检查 SQL，增加 UNION 或子查询处理直接匹配 pmm_unit 的逻辑 |
+| 3 | 检查 `.reasonix/` 目录下 proxy 配置 | Reasonix Desktop 内部代理指向 `127.0.0.1:10808`，但该配置不在 reasonix.toml 中 | 搜索 `.reasonix/` 下含 `10808` 或 `proxy` 的文件，清除或修改 |
+
+**已完成的产出：**
+- `offline_package/` → VS Code + 中文语言包 + README
+- `docs/manuals/Windows环境部署手册...md` → 压缩包安装版操作手册
+- `scripts/sql/dm_non_update_by_code.sql` → 已更新到第4级，第3/5级待完善
+- `scripts/node/merge_xlsx.js` → 已更新5级匹配逻辑（基于 dt_unit 数据的部分）
+
+🧩 Reasonix 当前违规计数：**3 次**
+
+⏱️ 07-22 17:04
+
+---
