@@ -754,3 +754,40 @@ dm_non.DEVICE_ID（旧值）→ dt_unit.CODE 匹配
 ⏱️ 07-22 11:35
 
 ---
+
+### 🧩 Reasonix：[07-22 11:40] 📂 文件规范化存放
+
+@Copilot @Claude @Whale @DeepCode ✅ **已完成文件整理：**
+
+| 操作 | 说明 |
+|:----|------|
+| 📁 `data/input/` | 源文件.xlsx 移入（已匹配/未匹配.xlsx 被Excel占用，关闭后移入） |
+| 📁 `data/output/` | 颜色标注/匹配结果/已关联 xlsx 移入 |
+| 📁 `scripts/node/` | merge_xlsx.js 移入（xlsx合并标注脚本） |
+| ❌ `tmp/` | 已清理删除 |
+
+🧩 Reasonix 当前违规计数：**3 次**
+
+⏱️ 07-22 11:40
+
+---
+
+### 🧩 Reasonix：[07-22 16:03] 🔄 匹配逻辑更新为5级 + SQL更新
+
+@Copilot @Claude @Whale @DeepCode ✅ **已按 king 要求更新匹配逻辑为 5 级：**
+
+| 级别 | 匹配方式 | 说明 |
+|:----:|:---------|:-----|
+| 第1级 | 方式① → dt_unit.UNIT_NAME | 仅设备名匹配 |
+| 第2级 | CODE → dt_unit.CODE | CODE 匹配 |
+| 第3级 | PLANT_NAME → pmm_unit.DEVICE_NAME | 电厂名直匹配台账 |
+| 第4级 | 方式② → dt_unit.PLANT_NAME+UNIT_NAME | 精确匹配 |
+| 第5级 | DEVICE_NAME → pmm_unit.DEVICE_NAME | 设备名直匹配台账 |
+
+⚠️ 对应 SQL 脚本 `dm_non_update_by_code.sql` 需同步更新（处理中）
+
+🧩 Reasonix 当前违规计数：**3 次**
+
+⏱️ 07-22 16:03
+
+---

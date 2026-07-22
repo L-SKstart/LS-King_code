@@ -31,31 +31,33 @@ const sd = XLSX.utils.sheet_to_json(XLSX.readFile('源文件.xlsx').Sheets['DahN
 const md = XLSX.utils.sheet_to_json(XLSX.readFile('已匹配.xlsx').Sheets['结果'], {header: 1});
 const ud = XLSX.utils.sheet_to_json(XLSX.readFile('未匹配.xlsx').Sheets['结果'], {header: 1});
 
-// ===== 匹配函数：对源文件一行执行 3→2→1 逻辑 =====
+// ===== 匹配函数：对源文件一行执行 5级匹配逻辑 =====
 function matchSourceRow(row) {
     const facName = String(row[1] || '').trim();
     const unitName = String(row[3] || '').trim();
     const unitCode = String(row[4] || '').trim();
 
-    // 第3级：方式② — 精确匹配（PLANT_NAME + UNIT_NAME）
-    const m3 = dtUnits.filter(d =>
-        d.plant_name === facName && d.unit_name === unitName);
-    if (m3.length > 0) return { matched: true, level: 3, cim_id: m3[0].cim_id };
-
-    // 第2级：方式① — 仅 UNIT_NAME 匹配
-    // 条件：该电厂+设备名的精确组合不存在于 dt_unit
+    // 第1级：方式① — 仅 UNIT_NAME 匹配
     const exactExists = dtUnits.some(d =>
         d.plant_name === facName && d.unit_name === unitName);
     if (!exactExists) {
-        const m2 = dtUnits.filter(d => d.unit_name === unitName);
+        const m1 = dtUnits.filter(d => d.unit_name === unitName);
+        if (m1.length > 0) return { matched: true, level: 1, cim_id: m1[0].cim_id };
+    }
+
+    // 第2级：CODE 匹配
+    if (unitCode && unitCode !== 'undefined' && unitCode !== 'NUll') {
+        const m2 = dtUnits.filter(d => d.code === unitCode);
         if (m2.length > 0) return { matched: true, level: 2, cim_id: m2[0].cim_id };
     }
 
-    // 第1级：CODE 匹配
-    if (unitCode && unitCode !== 'undefined' && unitCode !== 'NUll') {
-        const m1 = dtUnits.filter(d => d.code === unitCode);
-        if (m1.length > 0) return { matched: true, level: 1, cim_id: m1[0].cim_id };
-    }
+    // 第3级：PLANT_NAME → pmm_unit.DEVICE_NAME（需pmm_unit数据，暂略）
+    // 第4级：方式② — 精确匹配（PLANT_NAME + UNIT_NAME）
+    const m4 = dtUnits.filter(d =>
+        d.plant_name === facName && d.unit_name === unitName);
+    if (m4.length > 0) return { matched: true, level: 4, cim_id: m4[0].cim_id };
+
+    // 第5级：DEVICE_NAME → pmm_unit.DEVICE_NAME（需pmm_unit数据，暂略）
 
     return { matched: false, level: 0, cim_id: null };
 }

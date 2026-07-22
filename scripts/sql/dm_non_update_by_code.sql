@@ -2,12 +2,15 @@
 -- 更新 dm_non_market_unit_plan — 完整匹配逻辑 + 版本过滤
 -- 适用：MySQL 5.7+
 --
--- 匹配优先级：
---   第1级：CODE 匹配 — DEVICE_ID → dt_unit.CODE（DEVICE_ID初始即为CODE）
---   第2级：方式① — DEVICE_NAME → dt_unit.UNIT_NAME（仅用设备名）
---   第3级：方式② — PLANT_NAME+DEVICE_NAME → dt_unit.PLANT_NAME+UNIT_NAME
+-- 匹配优先级（5级）：
+--   第1级：方式① — DEVICE_NAME → dt_unit.UNIT_NAME（仅设备名）
+--   第2级：CODE 匹配 — DEVICE_ID → dt_unit.CODE
+--   第3级：PLANT_NAME → pmm_unit.DEVICE_NAME（直匹配台账）
+--   第4级：方式② — PLANT_NAME+DEVICE_NAME → dt_unit.PLANT_NAME+UNIT_NAME
+--   第5级：DEVICE_NAME → pmm_unit.DEVICE_NAME（直匹配台账）
 --
--- 链路：dm_non → dt_unit(CIM_ID) → pmm_unit(版本过滤) → 更新 dm_non
+-- 链路（第1/2/4级）：dm_non → dt_unit(CIM_ID) → pmm_unit(版本过滤) → 更新
+-- 链路（第3/5级）：dm_non → pmm_unit(直接匹配+版本过滤) → 更新
 -- 更新字段：DEVICE_ID、DEVICE_NAME、PLANT_ID、PLANT_NAME、UPDATE_TIME
 -- 参数：${bizdate}
 -- ============================================================
@@ -48,18 +51,21 @@ JOIN (
         u.PLANT_ID    AS new_plant_id,
         u.PLANT_NAME  AS new_plant_name
     FROM dm_non_market_unit_plan p
-    -- 第1级：CODE 匹配（DEVICE_ID 初始即为 CODE）
+    -- 5级匹配：按优先级依次尝试
     JOIN dt_unit d
-        ON d.CODE = p.DEVICE_ID
-        -- 第2级：方式① — CODE 没匹配到且精确配不存在时，仅用设备名
-        OR (d.UNIT_NAME = p.DEVICE_NAME
-            AND NOT EXISTS (SELECT 1 FROM dt_unit WHERE CODE = p.DEVICE_ID)
+        -- 第1级：方式① — 仅 UNIT_NAME 匹配（该电厂+设备不在 dt_unit 中时）
+        ON (d.UNIT_NAME = p.DEVICE_NAME
             AND NOT EXISTS (SELECT 1 FROM dt_unit
                             WHERE PLANT_NAME = p.PLANT_NAME
                               AND UNIT_NAME  = p.DEVICE_NAME))
-        -- 第3级：方式② — CODE 没匹配到，用精确配（电厂+设备名）
+        -- 第2级：CODE 匹配
+        OR (d.CODE = p.DEVICE_ID
+            AND NOT EXISTS (SELECT 1 FROM dt_unit WHERE UNIT_NAME = p.DEVICE_NAME)
+            AND NOT EXISTS (SELECT 1 FROM dt_unit WHERE CODE = p.DEVICE_ID))
+        -- 第4级：方式② — 精确匹配
         OR (d.PLANT_NAME = p.PLANT_NAME
             AND d.UNIT_NAME = p.DEVICE_NAME
+            AND NOT EXISTS (SELECT 1 FROM dt_unit WHERE UNIT_NAME = p.DEVICE_NAME)
             AND NOT EXISTS (SELECT 1 FROM dt_unit WHERE CODE = p.DEVICE_ID))
     JOIN pmm_unit u ON u.CIM_ID = d.CIM_ID
     CROSS JOIN (
