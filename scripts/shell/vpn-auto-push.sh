@@ -1,6 +1,7 @@
 #!/bin/bash
 # ============================================================================
 # vpn-auto-push.sh — Git 推送失败时自动启动 VPN 并重试，不行则切换 VPN 线路
+# 🔧 2026-07-22 Claude：退出时自动清理 VPN + 系统代理，防止钉钉无法联网
 # ============================================================================
 # 用法：
 #   bash scripts/shell/vpn-auto-push.sh [git push 的额外参数]
@@ -201,7 +202,7 @@ start_vpn() {
     fi
 }
 
-# 停止 v2rayN（强制杀进程）
+# 停止 v2rayN（优雅关闭优先 → 超时强制终止）
 stop_vpn() {
     if ! is_vpn_running; then
         log_info "v2rayN 未在运行，无需停止"
@@ -209,12 +210,23 @@ stop_vpn() {
     fi
 
     log_step "停止 v2rayN VPN..."
-    # 使用 taskkill 强制终止
+
+    # 🔧 2026-07-22 Claude：先尝试正常关闭，避免 TUN 虚拟网卡残留
+    cmd.exe /c "taskkill /IM v2rayN.exe 2>NUL" 2>/dev/null || true
+    sleep 2
+
+    if ! is_vpn_running; then
+        log_info "✓ v2rayN 已正常退出"
+        return 0
+    fi
+
+    # 仍在运行 → 强制终止
+    log_warn "v2rayN 未正常退出，强制终止..."
     cmd.exe /c "taskkill /F /IM v2rayN.exe 2>NUL" 2>/dev/null || true
     sleep 2
 
     if is_vpn_running; then
-        log_warn "⚠ v2rayN 未能完全停止，继续尝试..."
+        log_warn "⚠ v2rayN 未能完全停止（可能需要管理员权限）"
         return 0
     fi
     log_info "✓ v2rayN 已停止"
