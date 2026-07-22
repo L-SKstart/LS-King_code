@@ -64,3 +64,9 @@ tools/deepcode-cli/node_modules/
 
 # === 大文件下载 ===
 assets/downloads/
+
+# === 离线工具包二进制（zip/vsix，本地下载，不提交到 Git） ===
+offline_package/*.zip
+offline_package/*.vsix
+# 但保留文档说明
+!offline_package/README.md
