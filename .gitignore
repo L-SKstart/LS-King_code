@@ -44,6 +44,17 @@ skills/reasonix/deploy-check/
 # === 环境变量凭据 ===
 .env
 
+# === Node 依赖 ===
+package.json
+package-lock.json
+node_modules/
+
+# === Excel 临时文件 ===
+~$*.xlsx
+
+# === Excel 工作文件 ===
+*.xlsx
+
 # === 工作空间模板导出 ===
 template.zip
 
