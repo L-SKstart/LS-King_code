@@ -1,11 +1,13 @@
 #!/bin/bash
 # 🔧 2026-07-21 Reasonix：Git 推送自动 VPN 切换脚本（修复版）
+# 🔧 2026-07-22 Claude：5 处安全修复（local代理/trap清理/系统代理/VPN停止/--stop模式）
 #
 # 用法：
 #   bash scripts/shell/git-push-with-vpn.sh          # 推送 main（默认）
 #   bash scripts/shell/git-push-with-vpn.sh "msg"    # 带提交信息
+#   bash scripts/shell/git-push-with-vpn.sh --stop   # 停止 VPN + 清除所有代理残留
 #
-# 流程：先直接推 → 失败则开 v2rayN 走代理重试 → 再失败则切换线路 → 最终清理
+# 流程：先直接推 → 失败则开 v2rayN 走代理重试 → 再失败则切换线路 → 退出时自动清理代理
 
 # ============================================================
 # 配置（v2rayN）
@@ -62,16 +64,61 @@ start_v2ray() {
 # 设置 / 清除 Git 代理
 # ============================================================
 set_git_proxy() {
-  info "设置 Git 代理（SOCKS5 127.0.0.1:10808）..."
-  git config http.proxy "$PROXY_SOCKS5" 2>/dev/null || true
-  git config https.proxy "$PROXY_SOCKS5" 2>/dev/null || true
+  info "设置 Git 代理（SOCKS5 127.0.0.1:10808，仅当前仓库）..."
+  # 🔧 2026-07-22 Claude：改为 --local，不污染全局 Git 配置
+  git config --local http.proxy "$PROXY_SOCKS5" 2>/dev/null || true
+  git config --local https.proxy "$PROXY_SOCKS5" 2>/dev/null || true
 }
 
 unset_git_proxy() {
-  info "清除 Git 代理..."
-  git config --unset http.proxy 2>/dev/null || true
-  git config --unset https.proxy 2>/dev/null || true
+  info "清除 Git 代理（当前仓库）..."
+  git config --local --unset http.proxy 2>/dev/null || true
+  git config --local --unset https.proxy 2>/dev/null || true
 }
+
+# 🔧 2026-07-22 Claude：新增 — 清除 Windows 系统代理残留
+unset_system_proxy() {
+  info "清除 Windows 系统代理..."
+  # 关闭系统代理开关
+  cmd.exe /c "reg add \"HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings\" /v ProxyEnable /t REG_DWORD /d 0 /f" 2>/dev/null || true
+  # 清除残留的代理服务器地址
+  cmd.exe /c "reg delete \"HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings\" /v ProxyServer /f 2>NUL" 2>/dev/null || true
+  # 重置 WinHTTP 代理
+  cmd.exe /c "netsh winhttp reset proxy" >/dev/null 2>&1 || true
+  info "系统代理已清除"
+}
+
+# 🔧 2026-07-22 Claude：新增 — 停止 v2rayN 进程
+stop_v2ray_if_running() {
+  if ! is_v2ray_running; then
+    return 0
+  fi
+  info "停止 v2rayN..."
+  # 尝试正常关闭
+  cmd.exe /c "taskkill /IM v2rayN.exe 2>NUL" 2>/dev/null || true
+  sleep 2
+  # 如果还在，强制终止
+  if is_v2ray_running; then
+    cmd.exe /c "taskkill /F /IM v2rayN.exe 2>NUL" 2>/dev/null || true
+    sleep 1
+  fi
+  info "v2rayN 已停止"
+}
+
+# 🔧 2026-07-22 Claude：新增 — 完整清理（trap 调用）
+cleanup() {
+  local exit_code=$?
+  unset_git_proxy
+  unset_system_proxy
+  # 推送成功时停止 VPN（失败时保留让用户排查）
+  if [ $exit_code -eq 0 ]; then
+    stop_v2ray_if_running
+  fi
+  exit $exit_code
+}
+
+# 🔧 2026-07-22 Claude：捕获退出信号确保清理（Ctrl+C / 异常 / 正常结束）
+trap cleanup EXIT SIGINT SIGTERM
 
 # ============================================================
 # 执行 Git 推送（自动判断当前分支）
@@ -184,7 +231,19 @@ switch_v2ray_line() {
 # ============================================================
 main() {
   local commit_msg="${1:-}"
-  local retry=0
+
+  # 🔧 2026-07-22 Claude：新增 --stop 模式 — 停止 VPN 并清理所有代理残留
+  if [ "$commit_msg" = "--stop" ]; then
+    echo ""
+    info "====== VPN 停止 + 代理清理 ======"
+    echo ""
+    stop_v2ray_if_running
+    unset_git_proxy
+    unset_system_proxy
+    echo ""
+    info "====== 清理完成，请尝试重新登录钉钉 ======"
+    return 0
+  fi
 
   echo ""
   info "====== Git 推送（带 VPN 自动切换）======"
@@ -199,7 +258,6 @@ main() {
     return 0
   fi
   warn "直连推送失败"
-  retry=1
 
   # 第 2 次：开 VPN
   echo ""
@@ -208,13 +266,11 @@ main() {
   set_git_proxy
 
   if do_git_push "$commit_msg"; then
-    info "VPN 代理推送成功"
-    unset_git_proxy
+    info "VPN 代理推送成功（trap 将自动清理代理）"
     echo ""
     info "====== 推送完成 ======"
     return 0
   fi
-  retry=2
 
   # 第 3 次：切换线路
   echo ""
@@ -223,18 +279,17 @@ main() {
   sleep 2
 
   if do_git_push "$commit_msg"; then
-    info "切换线路后推送成功"
-    unset_git_proxy
+    info "切换线路后推送成功（trap 将自动清理代理）"
     echo ""
     info "====== 推送完成 ======"
     return 0
   fi
 
   # 全部失败
-  unset_git_proxy
   echo ""
   error "====== 推送失败（已尝试直连 → VPN → 切换线路）======"
-  error "请手动检查网络或 v2rayN 状态"
+  error "v2rayN 仍在运行中（保留用于手动排查）"
+  error "如需清理代理残留，运行：bash scripts/shell/vpn-cleanup.sh"
   return 1
 }
 

@@ -304,19 +304,39 @@ is_network_error() {
     return 1
 }
 
+# 🔧 2026-07-22 Claude：新增 — 清除 Windows 系统代理残留
+unset_system_proxy() {
+    log_info "清除 Windows 系统代理..."
+    # 关闭系统代理开关
+    cmd.exe /c "reg add \"HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings\" /v ProxyEnable /t REG_DWORD /d 0 /f" 2>/dev/null || true
+    # 清除残留的代理服务器地址
+    cmd.exe /c "reg delete \"HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings\" /v ProxyServer /f 2>NUL" 2>/dev/null || true
+    # 重置 WinHTTP 代理
+    cmd.exe /c "netsh winhttp reset proxy" >/dev/null 2>&1 || true
+    log_info "✓ 系统代理已清除"
+}
+
 # ============================================================
 # 清理函数（脚本退出时执行）
 # ============================================================
 cleanup() {
     local exit_code=$?
-    # 无论成功失败，恢复 git 代理设置（不保留代理配置污染本地环境）
+    # 🔧 2026-07-22 Claude：退出时全面清理，防止代理残留导致钉钉/浏览器无法联网
+    log_info "正在清理代理配置..."
+    # 1. 清除 Git 代理
     unset_git_proxy
-    # 退出时不自动停止 VPN（用户可能还在用）
-    # 配置备份不自动还原（让下次启动自然恢复）
+    # 2. 清除 Windows 系统代理（钉钉等应用依赖此设置）
+    unset_system_proxy
+    # 3. 推送成功 → 停止 VPN（失败时保留让用户排查）
+    if [ $exit_code -eq 0 ]; then
+        log_info "推送成功，停止 VPN..."
+        stop_vpn
+    fi
     exit $exit_code
 }
 
-trap cleanup EXIT
+# 🔧 2026-07-22 Claude：捕获所有退出信号确保清理（Ctrl+C / 异常 / 正常结束）
+trap cleanup EXIT SIGINT SIGTERM
 
 # ============================================================
 # 主流程
